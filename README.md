@@ -103,7 +103,7 @@ Update the following files with your information:
 ### Projects
 Projects are automatically fetched from your GitHub profile. Update the GitHub username in `src/components/Projects.jsx`:
 ```javascript
-const username = 'surajskrv'; // Change to your GitHub username
+const username = 'surajskrv';
 ```
 
 ## 📱 Responsive Design
@@ -115,29 +115,7 @@ The portfolio is fully responsive with breakpoints:
 
 ## 🌐 Deployment
 
-### Vercel (Recommended)
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy automatically
-
-### Netlify
-1. Build the project: `npm run build`
-2. Upload the `dist` folder to Netlify
-
-### GitHub Pages
-1. Install gh-pages: `npm install --save-dev gh-pages`
-2. Add to package.json:
-   ```json
-   "scripts": {
-     "predeploy": "npm run build",
-     "deploy": "gh-pages -d dist"
-   }
-   ```
-3. Deploy: `npm run deploy`
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+ https://suraj-portfolio-app.vercel.app/
 
 ## 🤝 Contributing
 
@@ -145,7 +123,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Contact
 
-- **Email**: surajskrv@gmail.com
 - **LinkedIn**: [linkedin.com/in/surajskrv](https://linkedin.com/in/surajskrv)
 - **GitHub**: [github.com/surajskrv](https://github.com/surajskrv)
 
