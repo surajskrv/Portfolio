@@ -1,36 +1,48 @@
-import { FaPython, FaJs, FaHtml5, FaCss3Alt, FaDatabase, FaReact, FaVuejs, FaGitAlt, FaDocker } from 'react-icons/fa';
-import { SiStreamlit, SiFlask, SiPostgresql, SiPostman, SiOpenai } from 'react-icons/si';
+import { FaPython, FaJs, FaHtml5, FaCss3Alt, FaDatabase, FaJava } from 'react-icons/fa';
+import { SiNodedotjs, SiExpress, SiMongodb, SiFlask, SiPostman, SiTailwindcss } from 'react-icons/si';
 import { VscVscode } from "react-icons/vsc";
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaVuejs, FaReact } from 'react-icons/fa';
+import { TbApi } from "react-icons/tb";
+import { DiBootstrap } from "react-icons/di";
+
 
 const technicalSkills = [
   {
     category: 'Programming Languages',
     skills: [
-      { name: 'Python', icon: <FaPython className="text-blue-400" /> },
       { name: 'JavaScript', icon: <FaJs className="text-yellow-400" /> },
-      { name: 'HTML5', icon: <FaHtml5 className="text-orange-500" /> },
-      { name: 'CSS3', icon: <FaCss3Alt className="text-blue-500" /> },
+      { name: 'Python', icon: <FaPython className="text-blue-400" /> },
+      { name: 'Java', icon: <FaJava className="text-orange-500" /> },
+    ],
+  },
+  {
+    category: 'Web Development',
+    skills: [
+      { name: 'Vuejs', icon: <FaVuejs className="text-green-400" /> },
+      { name: 'React', icon: <FaReact className="text-blue-500" /> },
+      { name: 'HTML', icon: <FaHtml5 className="text-orange-500" /> },
+      { name: 'CSS', icon: <FaCss3Alt className="text-blue-500" /> },
+      { name: 'Node.js', icon: <SiNodedotjs className="text-green-500" /> },
+      { name: 'Express', icon: <SiExpress className="text-gray-300" /> },
+      { name: 'RESTful APIs', icon: <TbApi className="text-blue-400" /> },
+      { name: 'Flask', icon: <SiFlask className="text-gray-300" /> },
+      { name: 'BootStrap', icon: <DiBootstrap className="text-purple-700" /> },
+      { name: 'Tailwind', icon: <SiTailwindcss className="text-blue-600" /> },
+    ],
+  },
+  {
+    category: 'Database',
+    skills: [
+      { name: 'MongoDB', icon: <SiMongodb className="text-green-500" /> },
       { name: 'SQL', icon: <FaDatabase className="text-blue-300" /> },
     ],
   },
   {
-    category: 'Frameworks & Libraries',
-    skills: [
-      { name: 'React.js', icon: <FaReact className="text-cyan-400" /> },
-      { name: 'Vue.js', icon: <FaVuejs className="text-green-400" /> },
-      { name: 'Streamlit', icon: <SiStreamlit className="text-red-400" /> },
-      { name: 'Flask', icon: <SiFlask className="text-gray-300" /> },
-    ],
-  },
-  {
-    category: 'Other Technologies',
+    category: 'Other Tecnologies',
     skills: [
       { name: 'Git/GitHub', icon: <FaGithub className="text-gray-200" /> },
-      { name: 'VS Code', icon: <VscVscode className="text-blue-400" /> },
-      { name: 'Postman', icon: <SiPostman className="text-orange-400" /> },
-      { name: 'PostgreSQL', icon: <SiPostgresql className="text-blue-300" /> },
-      { name: 'Docker', icon: <FaDocker className="text-blue-400" /> },
+      { name: 'VsCode', icon: <VscVscode className="text-blue-400" /> },
+      { name: 'Postman', icon: <SiPostman className="text-orange-500" /> },
     ],
   },
 ];
@@ -38,12 +50,18 @@ const technicalSkills = [
 const softSkills = [
   'Problem Solving',
   'Critical Thinking',
-  'Communication',
-  'Team Collaboration',
-  'Time Management',
-  'Adaptability',
-  'Creativity',
   'Attention to Detail',
+  'Time Management',
+  'Communication',
+  'Decision Making',
+  'Team Collaboration',
+  'Quick Learner',
+];
+
+const whatIBring = [
+  'Strong foundation in modern web development technologies.',
+  'Experience with full-stack development and API integration.',
+  'Quick learner with ability to adapt to new technologies.',
 ];
 
 function Skills() {
@@ -72,19 +90,37 @@ function Skills() {
             ))}
           </div>
         </div>
-        {/* Soft Skills */}
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold gradient-text mb-8">Soft Skills</h2>
-          <div className="card grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-            {softSkills.map((skill) => (
-              <div
-                key={skill}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-200 font-medium text-base shadow-sm"
-              >
-                <span className="h-2 w-2 rounded-full bg-blue-500 inline-block"></span>
-                {skill}
-              </div>
-            ))}
+        {/* Soft Skills and What I Bring */}
+        <div className="flex-1 space-y-8">
+          {/* Soft Skills */}
+          <div>
+            <h2 className="text-3xl font-bold gradient-text mb-8">Soft Skills</h2>
+            <div className="card grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
+              {softSkills.map((skill) => (
+                <div
+                  key={skill}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-200 font-medium text-base shadow-sm"
+                >
+                  <span className="h-2 w-2 rounded-full bg-blue-500 inline-block"></span>
+                  {skill}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* What I Bring */}
+          <div>
+            <h2 className="text-3xl font-bold gradient-text mb-8">What I Bring</h2>
+            <div className="card p-4">
+              <ul className="space-y-3">
+                {whatIBring.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3 text-gray-700 dark:text-gray-200 text-base leading-relaxed">
+                    <span className="h-2 w-2 rounded-full bg-blue-500 inline-block mt-2 flex-shrink-0"></span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

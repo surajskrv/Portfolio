@@ -6,7 +6,6 @@ const navLinks = [
   { name: 'About', href: 'about' },
   { name: 'Skills', href: 'skills' },
   { name: 'Projects', href: 'projects' },
-  { name: 'Resume', href: 'resume' },
   { name: 'Contact', href: 'contact' },
 ];
 
@@ -15,10 +14,17 @@ function Navbar({ darkMode, setDarkMode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="relative w-full sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
-      <div className="max-w-5xl mx-auto flex items-center justify-between py-3 px-3 sm:px-4">
+    <nav className="fixed w-full top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+      <div className="max-w-5xl mx-auto flex items-center justify-between py-4 px-3 sm:px-4">
         {/* Left: Site Name */}
-        <div className="font-bold text-xl tracking-tight gradient-text">Suraj Kumar</div>
+        <ScrollLink
+          to="hero"
+          smooth={true}
+          duration={200}
+          className="font-bold text-xl tracking-tight gradient-text cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          Suraj Kumar
+        </ScrollLink>
         {/* Center: Nav Links */}
         <div className="hidden md:flex gap-6">
           {navLinks.map(link => (

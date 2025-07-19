@@ -1,79 +1,139 @@
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaDownload, FaArrowDown } from 'react-icons/fa';
 
 function Hero() {
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-[80vh] w-full text-center select-none">
-      <motion.h1
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6"
+    <section className="relative flex flex-col items-center justify-center min-h-screen w-full text-center select-none overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"></div>
+      
+      {/* Floating Particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-indigo-400 dark:bg-blue-400 rounded-full opacity-20"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -100, 0],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + i * 10}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4">
+        {/* Greeting */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-4"
         >
-        Hi, I'm{' '}
-        <span className="gradient-text">Suraj Kumar</span>
-      </motion.h1>
-      <motion.h2
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-200 mb-2"
-      >
-        Full Stack Developer
-      </motion.h2>
-      <motion.p
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto mb-8 text-base sm:text-lg"
-      >
-        Building modern, scalable, and beautiful web applications with passion and precision.
-      </motion.p>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
-      >
-        <a
-          href="/Resume.pdf"
-          download
-          className="px-6 py-2 rounded bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow transition"
+          <span className="text-lg sm:text-xl text-indigo-600 dark:text-orange-400 font-medium">
+            👋 Hello, I'm
+          </span>
+        </motion.div>
+
+        {/* Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4"
         >
-          Download Resume
-        </a>
-        <a
-          href="#about"
-          className="px-6 py-2 rounded border border-indigo-500 text-indigo-400 hover:bg-indigo-500 hover:text-white font-semibold shadow transition"
+          <span className="gradient-text">Suraj Kumar</span>
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.h3
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="text-lg sm:text-xl text-indigo-600 dark:text-blue-300 font-medium mb-6"
         >
-          Learn More
-        </a>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.8 }}
-        className="flex gap-6 justify-center"
-      >
-        <a
-          href="https://github.com/your-github"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-400 hover:text-indigo-400 text-2xl transition"
-          aria-label="GitHub"
+          Full Stack Developer | MERN, Flask, AI Enthusiast
+        </motion.h3>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-gray-600 dark:text-gray-200 max-w-2xl mx-auto mb-8 text-lg sm:text-xl leading-relaxed"
         >
-          <FaGithub />
-        </a>
-        <a
-          href="https://linkedin.com/in/your-linkedin"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-400 hover:text-indigo-400 text-2xl transition"
-          aria-label="LinkedIn"
+          Building scalable, user-friendly web apps with modern tech like React, Flask, and Node.js. I love crafting clean, efficient solutions to complex problems turning ideas into fast, modern web experiences.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
-          <FaLinkedin />
-        </a>
-      </motion.div>
+          <motion.a
+            href="/Resume.pdf"
+            download
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FaDownload className="group-hover:animate-bounce" />
+            Download Resume
+          </motion.a>
+          <motion.a
+            href="#about"
+            className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-indigo-600 dark:border-white text-indigo-600 dark:text-white hover:bg-indigo-600 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Learn More
+            <FaArrowDown className="group-hover:animate-bounce" />
+          </motion.a>
+        </motion.div>
+
+        {/* Social Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+          className="flex gap-6 justify-center"
+        >
+          <motion.a
+            href="https://github.com/surajskrv"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group p-4 bg-white dark:bg-white/10 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl text-gray-600 dark:text-white hover:text-indigo-600 dark:hover:text-blue-300 transition-all duration-300 border border-gray-200 dark:border-white/20"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="GitHub"
+          >
+            <FaGithub className="text-2xl group-hover:animate-pulse" />
+          </motion.a>
+          <motion.a
+            href="https://linkedin.com/in/surajskrv"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group p-4 bg-white dark:bg-white/10 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl text-gray-600 dark:text-white hover:text-indigo-600 dark:hover:text-blue-300 transition-all duration-300 border border-gray-200 dark:border-white/20"
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="LinkedIn"
+          >
+            <FaLinkedin className="text-2xl group-hover:animate-pulse" />
+          </motion.a>
+        </motion.div>
+      </div>
     </section>
   );
 }
