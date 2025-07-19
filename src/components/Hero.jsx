@@ -1,6 +1,25 @@
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaDownload, FaArrowDown } from 'react-icons/fa';
 
+const handleResumeDownload = () => {
+  try {
+    const link = document.createElement('a');
+    link.href = '/Resume.pdf';
+    link.download = 'Suraj_Kumar_Resume.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    // Small delay to ensure the download starts
+    setTimeout(() => {
+      document.body.removeChild(link);
+    }, 100);
+  } catch (error) {
+    console.error('Download failed:', error);
+    // Fallback: open in new tab
+    window.open('/Resume.pdf', '_blank');
+  }
+};
+
 function Hero() {
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen w-full text-center select-none overflow-hidden">
@@ -82,16 +101,15 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
-          <motion.a
-            href="/Resume.pdf"
-            download
+          <motion.button
+            onClick={handleResumeDownload}
             className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <FaDownload className="group-hover:animate-bounce" />
             Download Resume
-          </motion.a>
+          </motion.button>
           <motion.a
             href="#about"
             className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-indigo-600 dark:border-white text-indigo-600 dark:text-white hover:bg-indigo-600 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"

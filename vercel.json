@@ -1,0 +1,17 @@
+{
+  "headers": [
+    {
+      "source": "/Resume.pdf",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/pdf"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Suraj_Kumar_Resume.pdf\""
+        }
+      ]
+    }
+  ]
+} 
