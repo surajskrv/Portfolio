@@ -10,7 +10,7 @@ const socials = [
   },
   {
     icon: <FaLinkedin />,
-    href: 'https://linkedin.com/in/surajskrv',
+    href: 'https://linkedin.com/in/surajskr',
     label: 'LinkedIn',
   },
 ];

@@ -7,14 +7,14 @@ I am a passionate and results-driven Full Stack Developer with hands-on experien
 
 const keyStrengths = [
   'Problem Solving',
-  'Team Collaboration', 
-  'Creative Thinking',
+  'Critical Thinking',
   'Quick Learning',
   'Attention to Detail',
-  'Time Management',
+  'Technical Adaptability',
+  'Self-Motivation',
+  'Goal-Oriented Approach'
 ];
 
-// Update this link with your actual certification URL
 const certificationLink = "https://certificates.knowledgehut.com/7bdc037b-caf9-41f3-ad32-d2fbe371c9c4-UG%20Non%20GGU%20Course%20completion-KH12-8009000-20250105005.jpeg";
 
 function About() {

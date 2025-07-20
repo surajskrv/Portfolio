@@ -1,7 +1,7 @@
 import { FaPython, FaJs, FaHtml5, FaCss3Alt, FaDatabase, FaJava } from 'react-icons/fa';
 import { SiNodedotjs, SiExpress, SiMongodb, SiFlask, SiPostman, SiTailwindcss } from 'react-icons/si';
 import { VscVscode } from "react-icons/vsc";
-import { FaGithub, FaVuejs, FaReact } from 'react-icons/fa';
+import { FaGithubSquare, FaVuejs, FaReact } from 'react-icons/fa';
 import { TbApi } from "react-icons/tb";
 import { DiBootstrap } from "react-icons/di";
 
@@ -22,10 +22,10 @@ const technicalSkills = [
       { name: 'React', icon: <FaReact className="text-blue-500" /> },
       { name: 'HTML', icon: <FaHtml5 className="text-orange-500" /> },
       { name: 'CSS', icon: <FaCss3Alt className="text-blue-500" /> },
-      { name: 'Node.js', icon: <SiNodedotjs className="text-green-500" /> },
-      { name: 'Express', icon: <SiExpress className="text-gray-300" /> },
+      { name: 'Node.js', icon: <SiNodedotjs className="text-green-600" /> },
+      { name: 'Express', icon: <SiExpress className="text-gray-800 dark:text-gray-300" /> },
       { name: 'RESTful APIs', icon: <TbApi className="text-blue-400" /> },
-      { name: 'Flask', icon: <SiFlask className="text-gray-300" /> },
+      { name: 'Flask', icon: <SiFlask className="text-gray-800 dark:text-gray-300" /> },
       { name: 'BootStrap', icon: <DiBootstrap className="text-purple-700" /> },
       { name: 'Tailwind', icon: <SiTailwindcss className="text-blue-600" /> },
     ],
@@ -40,7 +40,7 @@ const technicalSkills = [
   {
     category: 'Other Tecnologies',
     skills: [
-      { name: 'Git/GitHub', icon: <FaGithub className="text-gray-200" /> },
+      { name: 'Git/GitHub', icon: <FaGithubSquare className="text-gray-700 dark:text-gray-300" /> },
       { name: 'VsCode', icon: <VscVscode className="text-blue-400" /> },
       { name: 'Postman', icon: <SiPostman className="text-orange-500" /> },
     ],
@@ -48,14 +48,14 @@ const technicalSkills = [
 ];
 
 const softSkills = [
-  'Problem Solving',
-  'Critical Thinking',
-  'Attention to Detail',
-  'Time Management',
   'Communication',
-  'Decision Making',
+  'Time Management',
   'Team Collaboration',
-  'Quick Learner',
+  'Adaptability',
+  'Emotional Intelligence',
+  'Decision Making',
+  'Work Ethic',
+  'Empathy'
 ];
 
 const whatIBring = [

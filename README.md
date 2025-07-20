@@ -68,7 +68,14 @@ A modern, responsive personal portfolio website built with React and Tailwind CS
    VITE_EMAILJS_SERVICE_ID=your_emailjs_service_id
    VITE_EMAILJS_TEMPLATE_ID=your_emailjs_template_id
    VITE_EMAILJS_USER_ID=your_emailjs_user_id
+   VITE_GITHUB_TOKEN=your_github_personal_access_token_here
    ```
+   
+   **GitHub API Setup (Optional but Recommended):**
+   - Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+   - Generate a new token with `public_repo` scope
+   - Add the token to your `.env` file as `VITE_GITHUB_TOKEN`
+   - This increases your API rate limit from 60 to 5000 requests/hour
 
 4. **Start development server**
    ```bash
@@ -101,10 +108,17 @@ Update the following files with your information:
 - Component-specific styles: Update individual component files
 
 ### Projects
-Projects are automatically fetched from your GitHub profile. Update the GitHub username in `src/components/Projects.jsx`:
+Projects are automatically fetched from your GitHub profile. The component includes:
+- **GitHub API Integration**: Fetches real-time data from your GitHub repositories
+- **Fallback Data**: If the API fails (rate limiting, network issues), it shows sample projects
+- **Authentication Support**: Optional GitHub token for higher rate limits
+
+Update the GitHub username in `src/components/Projects.jsx`:
 ```javascript
-const username = 'surajskrv';
+const response = await fetch('https://api.github.com/users/YOUR_USERNAME/repos?sort=updated&per_page=8');
 ```
+
+**Note**: Without a GitHub token, you're limited to 60 API requests per hour. With a token, you get 5000 requests per hour.
 
 ## 📱 Responsive Design
 
@@ -123,7 +137,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Contact
 
-- **LinkedIn**: [linkedin.com/in/surajskrv](https://linkedin.com/in/surajskrv)
+- **LinkedIn**: [linkedin.com/in/surajskrv](https://linkedin.com/in/surajskr)
 - **GitHub**: [github.com/surajskrv](https://github.com/surajskrv)
 
 ---

@@ -20,7 +20,7 @@ function Navbar({ darkMode, setDarkMode }) {
         <ScrollLink
           to="hero"
           smooth={true}
-          duration={200}
+          duration={100}
           className="font-bold text-xl tracking-tight gradient-text cursor-pointer hover:opacity-80 transition-opacity"
         >
           Suraj Kumar
@@ -78,7 +78,7 @@ function Navbar({ darkMode, setDarkMode }) {
               key={link.name}
               to={link.href}
               smooth={true}
-              duration={150}
+              duration={120}
               offset={-64}
               spy={true}
               activeClass="text-indigo-600 dark:text-indigo-400"

@@ -140,7 +140,7 @@ function Hero() {
             <FaGithub className="text-2xl group-hover:animate-pulse" />
           </motion.a>
           <motion.a
-            href="https://linkedin.com/in/surajskrv"
+            href="https://linkedin.com/in/surajskr"
             target="_blank"
             rel="noopener noreferrer"
             className="group p-4 bg-white dark:bg-white/10 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl text-gray-600 dark:text-white hover:text-indigo-600 dark:hover:text-blue-300 transition-all duration-300 border border-gray-200 dark:border-white/20"
