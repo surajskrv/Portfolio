@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaGraduationCap, FaCertificate, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaGraduationCap, FaCertificate, FaExternalLinkAlt } from 'react-icons/fa';
 
 const whoIAmText = `
-I am a passionate and results-driven Full Stack Developer with hands-on experience building modern, scalable web applications. My core expertise lies in the MERN stack (MongoDB, Express.js, React, Node.js), along with proficiency in Flask and Vue.js for backend and frontend development. Beyond coding, I value clear communication, problem-solving, and staying curious. Whether I am working solo or in a team, I always aim to deliver thoughtful, user-focused solutions that make a measurable impact.
+I am a passionate and results-driven Full Stack Developer with hands-on experience building modern, scalable web applications. My core expertise lies in the MERN stack, along with proficiency in Flask and Vue.js for backend and frontend development. Beyond coding, I value clear communication, problem-solving, and staying curious. Whether I am working solo or in a team, I always aim to deliver thoughtful, user-focused solutions that make a measurable impact.
 `;
 
 const keyStrengths = [
@@ -69,6 +69,23 @@ function About() {
                     <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">Chennai, India</p>
                     <p className="text-gray-600 dark:text-gray-300 text-sm">
                       Comprehensive programming foundation with focus on modern development practices
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {/* MCA */}
+              <div className="card p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FaGraduationCap className="text-white text-xl" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-1">MCA</h4>
+                    <p className="text-indigo-600 dark:text-indigo-400 font-medium mb-1">IGNOU</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                      Patna, India</p>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      Advanced studies in computer applications with emphasis on software development and systems analysis.
                     </p>
                   </div>
                 </div>
