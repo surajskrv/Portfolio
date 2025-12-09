@@ -39,17 +39,7 @@ const languageColors = {
 // Fallback projects data in case GitHub API fails
 const fallbackProjects = [
   {
-    id: 1,
-    title: 'Portfolio Website',
-    description: 'A modern, responsive portfolio website built with React and Tailwind CSS. Features smooth animations, dark mode, and mobile-first design.',
-    github: 'https://github.com/surajskrv/portfolio',
-    demo: 'https://suraj-portfolio-app.vercel.app/',
-    stars: 0,
-    forks: 0,
-    language: ['React', 'Tailwindcss', 'JavaScript'],
-  },
-  {
-    id: 2,
+    id:1,
     title: 'Flixxit',
     description: 'Flixxit aims to be a web application with the likeness  and basic feature set of OTT platforms such as Netflix,  Prime Video and AppleTV+.',
     github: 'https://github.com/surajskrv/Flixxit',
@@ -59,7 +49,7 @@ const fallbackProjects = [
     language: ['React', 'Express', 'JavaScript', 'Mongodb'],
   },
   {
-    id: 3,
+    id:2,
     title: 'WheelSpot',
     description: 'A modern, full-stack parking management application built with Flask, Vue.js, and Celery. Real-time parking spot booking, admin control, automated reports, and beautiful email notifications.',
     github: 'https://github.com/surajskrv/WheelSpot',
@@ -67,6 +57,16 @@ const fallbackProjects = [
     stars: 0,
     forks: 0,
     language: ['Vuejs', 'Flask', 'JavaScript', 'Bootstrap', 'SQL'],
+  },
+  {
+    id: 3,
+    title: 'HouseSync',
+    description: 'The HomeSync is a multi-user platform built with Flask, Vue.js, and SQLite, designed to facilitate comprehensive home servicing and solutions.',
+    github: 'https://github.com/surajskrv/HouseSync',
+    demo: '',
+    stars: 0,
+    forks: 0,
+    language: ['Vuejs', 'Flask','JavaScript', 'Bootstrap', 'SQL'],
   },
   {
     id: 4,
@@ -77,26 +77,6 @@ const fallbackProjects = [
     stars: 1,
     forks: 0,
     language: ['Flask', 'Bootstrap','JavaScript', 'SQL'],
-  },
-  {
-    id: 5,
-    title: 'Super Tune',
-    description: 'Super Tune is a React + Vite app that displays a list of songs of the week, allowing you to sort by title or rating. Each song shows its title, artist, album art, and a star rating.',
-    github: 'https://github.com/surajskrv/Super_Tune',
-    demo: '',
-    stars: 0,
-    forks: 0,
-    language:  ['React', 'JavaScript'],
-  },
-  {
-    id: 6,
-    title: 'HouseSync',
-    description: 'The HomeSync is a multi-user platform built with Flask, Vue.js, and SQLite, designed to facilitate comprehensive home servicing and solutions.',
-    github: 'https://github.com/surajskrv/HouseSync',
-    demo: '',
-    stars: 0,
-    forks: 0,
-    language: ['Vuejs', 'Flask','JavaScript', 'Bootstrap', 'SQL'],
   },
 ];
 
@@ -125,7 +105,7 @@ function Projects() {
         
         // Filter out forks and get only original repositories
         const filteredRepos = repos
-          .filter(repo => !repo.fork && repo.description)
+          .filter(repo => !repo.fork && repo.description && repo.name !== 'Portfolio')
           .map(repo => ({
             id: repo.id,
             title: repo.name,
@@ -137,7 +117,7 @@ function Projects() {
             language: repo.language ? [repo.language] : [],
             topics: repo.topics || [],
           }))
-          .slice(0, 6); // Limit to 6 projects
+          .slice(0, 3); // Limit to 6 projects
         
         // If no valid repos found, use fallback
         if (filteredRepos.length === 0) {
