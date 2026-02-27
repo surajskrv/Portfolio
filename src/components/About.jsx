@@ -36,6 +36,7 @@ const About = memo(function About() {
         <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
           A little about <span className="gradient-text">me</span>
         </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-lg">My background, education, and what drives me as a developer.</p>
       </motion.div>
 
       <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -78,7 +79,7 @@ const About = memo(function About() {
               initial={{ opacity: 0, x: 20 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ delay: 0.15 + i * 0.1, duration: 0.4 }}
-              className="group p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300">
+              className="group p-5 rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 backdrop-blur-sm">
               <div className="flex items-start gap-4">
                 <div className={`w-10 h-10 ${edu.accent} rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm shadow-md`}>
                   {edu.icon}

@@ -41,7 +41,7 @@ const Footer = memo(function Footer() {
             by <span className="font-bold gradient-text">Suraj</span>
           </div>
 
-          <p className="text-xs text-gray-400 dark:text-gray-500">&copy; {new Date().getFullYear()} All rights reserved</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500">&copy; {new Date().getFullYear()} All rights reserved</p>
         </div>
       </div>
 

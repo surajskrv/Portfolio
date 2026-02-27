@@ -67,6 +67,7 @@ const Skills = memo(function Skills() {
         <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Tech I work <span className="gradient-text">with</span>
         </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">Languages, frameworks, and tools in my daily toolkit.</p>
       </motion.div>
 
       <div ref={ref}>

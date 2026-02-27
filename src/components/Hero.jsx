@@ -116,9 +116,9 @@ function Hero() {
         style={{ backgroundImage: 'radial-gradient(circle, #6366f1 0.8px, transparent 0.8px)', backgroundSize: '28px 28px' }} />
 
       {/* Content */}
-      <div className="relative z-10 max-w-2xl mx-auto px-4">
+      <div className="relative z-10 max-w-2xl mx-auto px-5 pt-20">
         {/* Badge */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-6">
           <span className="inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full bg-white/80 dark:bg-white/[0.05] text-gray-600 dark:text-gray-400 font-medium border border-gray-200 dark:border-white/10 shadow-sm">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -130,29 +130,28 @@ function Hero() {
 
         {/* Name */}
         <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-5xl sm:text-7xl lg:text-8xl font-display font-black mb-4 tracking-tight leading-[0.9]">
-          <span className="text-gray-900 dark:text-white">Suraj</span>
-          <br />
+          className="text-5xl sm:text-6xl lg:text-7xl font-display font-black mb-4 tracking-tight leading-[0.95]">
+          <span className="text-gray-900 dark:text-white">Suraj </span>
           <span className="gradient-text">Kumar</span>
         </motion.h1>
 
         {/* Role */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="mb-5">
-          <p className="text-lg sm:text-xl font-display font-medium text-gray-600 dark:text-gray-400">
-            <TypingEffect />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="mb-4">
+          <p className="text-base sm:text-lg font-display font-medium text-gray-600 dark:text-gray-400">
+            I'm a <TypingEffect />
           </p>
         </motion.div>
 
         {/* Description */}
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-10 text-sm sm:text-base leading-relaxed">
+          className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto mb-8 text-sm sm:text-[15px] leading-relaxed">
           Building scalable web apps with React, Flask & Node.js.
           Turning complex problems into clean, fast experiences.
         </motion.p>
 
         {/* CTAs */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-3 justify-center mb-14">
+          className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
           <button onClick={handleResumeDownload}
             className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30">
             <FaDownload className="text-xs group-hover:-translate-y-0.5 transition-transform" /> Resume
@@ -163,14 +162,14 @@ function Hero() {
           </a>
         </motion.div>
 
-        {/* Stats */}
+        {/* Stats — 3 items for balance */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.0 }}
-          className="flex items-center justify-center gap-8 sm:gap-14 mb-12 px-6 py-5 bg-white/60 dark:bg-white/[0.03] rounded-2xl border border-gray-200/50 dark:border-white/5 backdrop-blur-sm shadow-sm">
+          className="inline-flex items-center justify-center gap-8 sm:gap-12 px-8 py-4 bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/50 dark:border-white/5 backdrop-blur-sm shadow-sm mb-8">
           <AnimatedCounter value={10} label="Projects" />
-          <div className="w-px h-10 bg-gray-200 dark:bg-gray-800" />
+          <div className="w-px h-8 bg-gray-200 dark:bg-gray-800" />
           <AnimatedCounter value={10} label="Technologies" />
-          {/* <div className="w-px h-10 bg-gray-200 dark:bg-gray-800" />
-          <AnimatedCounter value={2} label="Years" /> */}
+          <div className="w-px h-8 bg-gray-200 dark:bg-gray-800" />
+          <AnimatedCounter value={1} label="Certifications" />
         </motion.div>
 
         {/* Socials */}

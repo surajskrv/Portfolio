@@ -108,7 +108,7 @@ const Projects = memo(function Projects() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ delay: i * 0.1, duration: 0.4 }}>
-              <TiltCard className="h-full rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 group">
+              <TiltCard className="h-full rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 group backdrop-blur-sm">
                 {/* Gradient accent */}
                 <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

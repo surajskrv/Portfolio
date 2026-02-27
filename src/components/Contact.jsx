@@ -6,7 +6,7 @@ const CONTACTS = [
   { icon: <FaLinkedin />, label: 'LinkedIn', value: 'surajskrv', href: 'https://linkedin.com/in/surajskr', accent: 'bg-blue-500' },
   { icon: <FaGithub />, label: 'GitHub', value: 'surajskrv', href: 'https://github.com/surajskrv', accent: 'bg-gray-800 dark:bg-gray-600' },
   { icon: <FaEnvelope />, label: 'Email', value: 'surajskrv@gmail.com', href: 'mailto:surajskrv@gmail.com?subject=Portfolio Contact', accent: 'bg-rose-500' },
-  { icon: <FaMapMarkerAlt />, label: 'Location', value: 'Patna, India', href: '#', accent: 'bg-emerald-500' },
+  { icon: <FaMapMarkerAlt />, label: 'Location', value: 'Patna, India', href: null, accent: 'bg-emerald-500' },
 ];
 
 const Contact = memo(function Contact() {
@@ -40,15 +40,16 @@ const Contact = memo(function Contact() {
         <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Let's work <span className="gradient-text">together</span>
         </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">Reach out through any of these channels — I'd love to connect.</p>
       </motion.div>
 
       {/* Contact Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         {CONTACTS.map((c, i) => (
           <motion.a key={c.label}
-            href={c.href}
-            target={c.href.startsWith('http') || c.href.startsWith('mailto') ? '_blank' : undefined}
-            rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            href={c.href || undefined}
+            target={c.href && (c.href.startsWith('http') || c.href.startsWith('mailto')) ? '_blank' : undefined}
+            rel={c.href && c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
