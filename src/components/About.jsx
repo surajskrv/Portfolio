@@ -1,175 +1,109 @@
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaCertificate, FaExternalLinkAlt } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
+import { memo } from 'react';
 
-const whoIAmText = `
-I am a passionate and results-driven Full Stack Developer with hands-on experience building modern, scalable web applications. My core expertise lies in the MERN stack, along with proficiency in Flask and Vue.js for backend and frontend development. Beyond coding, I value clear communication, problem-solving, and staying curious. Whether I am working solo or in a team, I always aim to deliver thoughtful, user-focused solutions that make a measurable impact.
-`;
+const whoIAmText = `I am a passionate Full Stack Developer with hands-on experience building modern, scalable web applications. My expertise spans the MERN stack, Flask, and Vue.js — delivering thoughtful solutions that make a measurable impact.`;
 
 const keyStrengths = [
   { name: 'Problem Solving', emoji: '🧩' },
   { name: 'Critical Thinking', emoji: '🧠' },
   { name: 'Quick Learning', emoji: '⚡' },
-  { name: 'Attention to Detail', emoji: '🔍' },
-  { name: 'Technical Adaptability', emoji: '🔄' },
-  { name: 'Self-Motivation', emoji: '🚀' },
-  { name: 'Goal-Oriented Approach', emoji: '🎯' },
+  { name: 'Detail-Oriented', emoji: '🔍' },
+  { name: 'Adaptability', emoji: '🔄' },
+  { name: 'Self-Motivated', emoji: '🚀' },
+  { name: 'Goal-Driven', emoji: '🎯' },
 ];
 
 const certificationLink = "https://certificates.knowledgehut.com/7bdc037b-caf9-41f3-ad32-d2fbe371c9c4-UG%20Non%20GGU%20Course%20completion-KH12-8009000-20250105005.jpeg";
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1 },
-  },
-};
+const education = [
+  { title: 'Diploma in Programming', institution: 'IIT Madras', location: 'Chennai', description: 'Programming foundation with modern development practices', icon: <FaGraduationCap />, accent: 'bg-indigo-500' },
+  { title: 'MCA', institution: 'IGNOU', location: 'Patna', description: 'Advanced studies in computer applications and software development', icon: <FaGraduationCap />, accent: 'bg-purple-500' },
+  { title: 'Full-Stack MERN', institution: 'KnowledgeHut UpGrad', location: 'Bootcamp', description: 'Intensive training in MongoDB, Express, React, Node.js', icon: <FaCertificate />, accent: 'bg-amber-500', certLink: certificationLink },
+];
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-};
+const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
 
-function About() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+const About = memo(function About() {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (
-    <section className="w-full max-w-6xl mx-auto py-16 px-4">
-      {/* Main Heading */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-14"
-      >
-        <h2 className="text-4xl font-display font-bold gradient-text mb-4">About Me</h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full"></div>
+    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6">
+      {/* Header */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} transition={{ duration: 0.5 }} className="mb-12">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">About</p>
+        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+          A little about <span className="gradient-text">me</span>
+        </h2>
       </motion.div>
 
-      <motion.div
-        ref={ref}
-        variants={containerVariants}
-        initial="hidden"
-        animate={inView ? 'visible' : 'hidden'}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-12"
-      >
+      <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column */}
-        <div className="space-y-8">
-          {/* Who I Am */}
-          <motion.div variants={itemVariants}>
-            <h3 className="text-2xl font-display font-bold text-gray-800 dark:text-gray-200 mb-4">Who I Am</h3>
-            <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed">
-              {whoIAmText}
-            </p>
+        <div className="lg:col-span-5 space-y-5">
+          {/* Bio */}
+          <motion.div initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={fadeUp} transition={{ delay: 0.1, duration: 0.4 }}
+            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Who I Am</p>
+            <p className="text-gray-600 dark:text-gray-300 text-[14px] leading-[1.75]">{whoIAmText}</p>
           </motion.div>
 
-          {/* Key Strengths */}
-          <motion.div variants={itemVariants}>
-            <h3 className="text-2xl font-display font-bold text-gray-800 dark:text-gray-200 mb-4">Key Strengths</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {keyStrengths.map((strength, i) => (
-                <motion.div
-                  key={strength.name}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.03, x: 4 }}
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200/60 dark:border-white/5 hover:border-indigo-300 dark:hover:border-indigo-500/30 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-all duration-300 cursor-default"
-                >
-                  <span className="text-lg">{strength.emoji}</span>
-                  <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">{strength.name}</span>
-                </motion.div>
+          {/* Strengths */}
+          <motion.div initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={fadeUp} transition={{ delay: 0.2, duration: 0.4 }}
+            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-4">Key Strengths</p>
+            <div className="flex flex-wrap gap-2">
+              {keyStrengths.map((s, i) => (
+                <motion.span key={s.name}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.3 + i * 0.04 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="chip cursor-default">
+                  <span>{s.emoji}</span>{s.name}
+                </motion.span>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* Right Column */}
-        <div className="space-y-8">
-          {/* Education */}
-          <motion.div variants={itemVariants}>
-            <h3 className="text-2xl font-display font-bold text-gray-800 dark:text-gray-200 mb-4">Education</h3>
-            <div className="space-y-4 relative">
-              {/* Timeline line */}
-              <div className="absolute left-6 top-10 bottom-10 w-[2px] bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 opacity-20 rounded-full hidden lg:block" />
-
-              {/* Diploma */}
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ y: -2 }}
-                className="group relative bg-white dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200/60 dark:border-white/5 hover:border-indigo-300/50 dark:hover:border-indigo-500/20 shadow-sm hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-400/15 group-hover:shadow-indigo-400/25 transition-shadow">
-                    <FaGraduationCap className="text-white text-lg" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-0.5">Diploma in Programming</h4>
-                    <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-0.5">IIT Madras</p>
-                    <p className="text-gray-400 dark:text-gray-500 text-xs mb-2">Chennai, India</p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                      Comprehensive programming foundation with focus on modern development practices
-                    </p>
-                  </div>
+        {/* Right: Education */}
+        <div className="lg:col-span-7 space-y-4">
+          <motion.p initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={fadeUp} transition={{ delay: 0.05 }}
+            className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-1 px-1">
+            Education & Certifications
+          </motion.p>
+          {education.map((edu, i) => (
+            <motion.div key={edu.title}
+              initial={{ opacity: 0, x: 20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.15 + i * 0.1, duration: 0.4 }}
+              className="group p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className={`w-10 h-10 ${edu.accent} rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm shadow-md`}>
+                  {edu.icon}
                 </div>
-              </motion.div>
-
-              {/* MCA */}
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ y: -2 }}
-                className="group relative bg-white dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200/60 dark:border-white/5 hover:border-indigo-300/50 dark:hover:border-indigo-500/20 shadow-sm hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-400/15 group-hover:shadow-indigo-400/25 transition-shadow">
-                    <FaGraduationCap className="text-white text-lg" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-sm font-bold text-gray-800 dark:text-gray-100">{edu.title}</h4>
+                    <span className="text-[11px] text-gray-400 dark:text-gray-500 font-medium flex-shrink-0">{edu.location}</span>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-0.5">MCA</h4>
-                    <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-0.5">IGNOU</p>
-                    <p className="text-gray-400 dark:text-gray-500 text-xs mb-2">Patna, India</p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                      Advanced studies in computer applications with emphasis on software development and systems analysis.
-                    </p>
-                  </div>
+                  <p className="text-indigo-600 dark:text-indigo-400 font-medium text-xs mt-0.5">{edu.institution}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-2 leading-relaxed">{edu.description}</p>
+                  {edu.certLink && (
+                    <a href={edu.certLink} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400 hover:text-amber-500 font-semibold text-xs mt-2.5 transition-colors">
+                      View Certificate <FaExternalLinkAlt className="text-[9px]" />
+                    </a>
+                  )}
                 </div>
-              </motion.div>
-
-              {/* Certificate */}
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ y: -2 }}
-                className="group relative bg-white dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200/60 dark:border-white/5 hover:border-purple-300/50 dark:hover:border-purple-500/20 shadow-sm hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-400 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-400/15 group-hover:shadow-purple-400/25 transition-shadow">
-                    <FaCertificate className="text-white text-lg" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-0.5">Full-Stack (MERN) Development</h4>
-                    <p className="text-purple-600 dark:text-purple-400 font-medium text-sm mb-0.5">KnowledgeHut UpGrad</p>
-                    <p className="text-gray-400 dark:text-gray-500 text-xs mb-2">Bootcamp</p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-3">
-                      Intensive training in MongoDB, Express.js, React, and Node.js for full-stack development
-                    </p>
-                    <motion.a
-                      href={certificationLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 font-medium text-sm transition-colors"
-                      whileHover={{ x: 4 }}
-                    >
-                      View Certificate
-                      <FaExternalLinkAlt className="text-xs" />
-                    </motion.a>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
-}
+});
 
 export default About;

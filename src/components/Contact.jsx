@@ -1,175 +1,112 @@
-import { motion } from 'framer-motion';
-import { FaLinkedin, FaGithub, FaMailBulk, FaMapMarkerAlt } from 'react-icons/fa';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { FaLinkedin, FaGithub, FaEnvelope, FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
+import { memo, useCallback, useRef } from 'react';
 
 const CONTACTS = [
-  {
-    icon: <FaLinkedin />,
-    label: 'LinkedIn',
-    value: 'linkedin.com/in/surajskrv',
-    href: 'https://linkedin.com/in/surajskr',
-    color: 'from-blue-500 to-blue-600',
-    glowColor: 'hover:shadow-blue-500/20',
-    description: 'Connect with me on LinkedIn for professional networking and opportunities.',
-  },
-  {
-    icon: <FaGithub />,
-    label: 'GitHub',
-    value: 'github.com/surajskrv',
-    href: 'https://github.com/surajskrv',
-    color: 'from-gray-700 to-gray-800',
-    glowColor: 'hover:shadow-gray-500/20',
-    description: 'Check out my projects and contributions on GitHub.',
-  },
-  {
-    icon: <FaMailBulk />,
-    label: 'Email',
-    value: 'surajskrv@gmail.com',
-    href: 'mailto:surajskrv@gmail.com?subject=Portfolio Contact&body=Hi Suraj,%0D%0A%0D%0AI would like to discuss a project opportunity with you.%0D%0A%0D%0ABest regards,',
-    color: 'from-red-500 to-rose-500',
-    glowColor: 'hover:shadow-red-500/20',
-    description: 'Send me an email for project inquiries and collaborations.',
-  },
-  {
-    icon: <FaMapMarkerAlt />,
-    label: 'Location',
-    value: 'Patna, India',
-    href: '#',
-    color: 'from-emerald-500 to-green-500',
-    glowColor: 'hover:shadow-emerald-500/20',
-    description: 'Based in Patna, India. Open to remote opportunities worldwide.',
-  },
+  { icon: <FaLinkedin />, label: 'LinkedIn', value: 'surajskrv', href: 'https://linkedin.com/in/surajskr', accent: 'bg-blue-500' },
+  { icon: <FaGithub />, label: 'GitHub', value: 'surajskrv', href: 'https://github.com/surajskrv', accent: 'bg-gray-800 dark:bg-gray-600' },
+  { icon: <FaEnvelope />, label: 'Email', value: 'surajskrv@gmail.com', href: 'mailto:surajskrv@gmail.com?subject=Portfolio Contact', accent: 'bg-rose-500' },
+  { icon: <FaMapMarkerAlt />, label: 'Location', value: 'Patna, India', href: '#', accent: 'bg-emerald-500' },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
-  }),
-};
+const Contact = memo(function Contact() {
+  const ctaRef = useRef(null);
+  const mX = useMotionValue(0);
+  const mY = useMotionValue(0);
+  const sx = useSpring(mX, { stiffness: 50, damping: 20 });
+  const sy = useSpring(mY, { stiffness: 50, damping: 20 });
 
-function Contact() {
+  const onMouseMove = useCallback((e) => {
+    if (!ctaRef.current) return;
+    const r = ctaRef.current.getBoundingClientRect();
+    mX.set(e.clientX - r.left);
+    mY.set(e.clientY - r.top);
+  }, [mX, mY]);
+
+  const spotlightBg = useTransform([sx, sy], ([x, y]) =>
+    `radial-gradient(500px circle at ${x}px ${y}px, rgba(99, 102, 241, 0.08), transparent 60%)`
+  );
+
   return (
-    <section className="w-full max-w-6xl mx-auto py-16 px-4">
-      {/* Header */}
+    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-14"
+        transition={{ duration: 0.5 }}
+        className="mb-12"
       >
-        <h2 className="text-4xl font-display font-bold gradient-text mb-4">Get In Touch</h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full mb-6"></div>
-        <p className="text-gray-500 dark:text-gray-400 text-base max-w-2xl mx-auto">
-          I'm always interested in hearing about new opportunities and exciting projects. 
-          Feel free to reach out through any of the channels below!
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">Contact</p>
+        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+          Let's work <span className="gradient-text">together</span>
+        </h2>
       </motion.div>
 
-      {/* Contact Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {CONTACTS.map((contact, index) => (
-          <motion.div
-            key={contact.label}
-            custom={index}
-            initial="hidden"
-            whileInView="visible"
+      {/* Contact Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        {CONTACTS.map((c, i) => (
+          <motion.a key={c.label}
+            href={c.href}
+            target={c.href.startsWith('http') || c.href.startsWith('mailto') ? '_blank' : undefined}
+            rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            variants={cardVariants}
-            className="group"
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            whileHover={{ y: -4 }}
+            className="group p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300"
           >
-            <motion.a
-              href={contact.href}
-              target={contact.href.startsWith('http') || contact.href.startsWith('mailto') ? '_blank' : undefined}
-              rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className={`block h-full p-6 bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200/60 dark:border-white/5 hover:border-indigo-300/50 dark:hover:border-indigo-500/20 transition-all duration-300 hover:shadow-xl ${contact.glowColor}`}
-              whileHover={{ y: -4 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {/* Icon */}
-              <motion.div
-                className={`w-14 h-14 bg-gradient-to-br ${contact.color} rounded-2xl flex items-center justify-center mb-4 mx-auto shadow-lg transition-transform duration-300`}
-                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <span className="text-white text-xl">{contact.icon}</span>
-              </motion.div>
-              
-              {/* Content */}
-              <div className="text-center">
-                <h3 className="text-lg font-display font-bold text-gray-800 dark:text-gray-200 mb-1.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  {contact.label}
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mb-2">
-                  {contact.value}
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-                  {contact.description}
-                </p>
-              </div>
-            </motion.a>
-          </motion.div>
+            <div className={`w-10 h-10 ${c.accent} rounded-xl flex items-center justify-center text-white text-sm mb-3 shadow-md group-hover:scale-110 transition-transform duration-300`}>
+              {c.icon}
+            </div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">{c.label}</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">{c.value}</p>
+          </motion.a>
         ))}
       </div>
 
-      {/* Call to Action */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
+      {/* CTA */}
+      <motion.div ref={ctaRef} onMouseMove={onMouseMove}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-center mt-14"
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-8 sm:p-10 shadow-xl shadow-indigo-500/20"
       >
-        <div className="relative overflow-hidden bg-gradient-to-r from-indigo-50/80 via-violet-50/60 to-purple-50/60 dark:from-indigo-900/8 dark:via-violet-900/6 dark:to-purple-900/6 rounded-3xl p-8 md:p-10 border border-indigo-200/30 dark:border-indigo-800/20">
-          {/* Floating decorative elements */}
-          <div className="absolute top-4 right-8 w-20 h-20 bg-indigo-200/30 dark:bg-indigo-600/5 rounded-full blur-2xl" />
-          <div className="absolute bottom-4 left-8 w-16 h-16 bg-purple-200/30 dark:bg-purple-600/5 rounded-full blur-2xl" />
-          
-          {/* Availability indicator */}
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">Available for opportunities</span>
-          </div>
+        {/* Spotlight */}
+        <motion.div className="absolute inset-0 pointer-events-none hidden sm:block" style={{ background: spotlightBg }} />
 
-          <h3 className="text-2xl font-display font-bold text-gray-800 dark:text-gray-200 mb-3">
-            Ready to Start a Project?
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-xl mx-auto text-sm">
-            Whether you have a project in mind or just want to chat about technology, 
-            I'd love to hear from you. Let's create something amazing together!
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <motion.a
-              href="mailto:surajskrv@gmail.com?subject=Project Inquiry&body=Hi Suraj,%0D%0A%0D%0AI have a project I'd like to discuss with you.%0D%0A%0D%0ABest regards,"
-              target="_blank"
-              className="inline-flex items-center gap-2 px-7 py-3 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:shadow-indigo-400/15 transition-all duration-300"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FaMailBulk />
-              Send Email
+        {/* Decorative circles */}
+        <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/10 rounded-full blur-xl" />
+        <div className="absolute -bottom-20 -left-16 w-40 h-40 bg-white/10 rounded-full blur-xl" />
+
+        <div className="relative z-10 text-center max-w-md mx-auto">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            <span className="text-xs text-white/80 font-semibold uppercase tracking-widest">Available</span>
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">Have a project in mind?</h3>
+          <p className="text-white/70 text-sm mb-7 leading-relaxed">I'd love to hear about your ideas. Let's build something great together.</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <motion.a href="mailto:surajskrv@gmail.com?subject=Project Inquiry" target="_blank"
+              className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-colors text-sm shadow-lg"
+              whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+              <FaEnvelope className="text-xs" /> Email Me
+              <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
             </motion.a>
-            <motion.a
-              href="https://linkedin.com/in/surajskr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-7 py-3 bg-white dark:bg-white/10 border-2 border-gray-200 dark:border-white/10 hover:border-indigo-300 dark:hover:border-indigo-500/30 text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FaLinkedin />
-              Connect on LinkedIn
+            <motion.a href="https://linkedin.com/in/surajskr" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white hover:bg-white/20 font-semibold rounded-xl transition-all text-sm backdrop-blur-sm"
+              whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+              <FaLinkedin className="text-xs" /> LinkedIn
             </motion.a>
           </div>
         </div>
       </motion.div>
     </section>
   );
-}
+});
 
 export default Contact;
