@@ -81,7 +81,7 @@ const Projects = memo(function Projects() {
   }, []);
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6" style={{ perspective: '1200px' }}>
+    <section className="w-full max-w-5xl mx-auto py-14 sm:py-20 px-4 sm:px-6" style={{ perspective: '1200px' }}>
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -90,18 +90,18 @@ const Projects = memo(function Projects() {
         className="mb-12"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">Projects</p>
-        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Featured <span className="gradient-text">work</span>
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">A selection of recent projects showcasing full-stack skills.</p>
       </motion.div>
 
       {loading ? (
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {[1,2,3].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : (
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
             <motion.div key={project.id}
               initial={{ opacity: 0, y: 24 }}
@@ -112,7 +112,7 @@ const Projects = memo(function Projects() {
                 {/* Gradient accent */}
                 <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-base font-display font-bold text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                       {project.title.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -133,7 +133,7 @@ const Projects = memo(function Projects() {
                   </div>
                 </div>
 
-                <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 flex gap-3">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 dark:border-gray-800 flex gap-2 sm:gap-3">
                   <a href={project.github} target="_blank" rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-900 dark:bg-gray-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-xs font-semibold shadow-sm">
                     <FaGithub /> Source

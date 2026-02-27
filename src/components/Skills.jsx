@@ -38,9 +38,9 @@ function MarqueeRow({ skills, reverse = false }) {
       <div className={`flex gap-3 will-change-transform ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} group-hover:[animation-play-state:paused]`}>
         {doubled.map((skill, i) => (
           <div key={`${skill.name}-${i}`}
-            className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 cursor-default">
-            <span className={`text-xl ${skill.color}`}>{skill.icon}</span>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">{skill.name}</span>
+            className="flex-shrink-0 flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-3 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 cursor-default">
+            <span className={`text-base sm:text-xl ${skill.color}`}>{skill.icon}</span>
+            <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">{skill.name}</span>
           </div>
         ))}
       </div>
@@ -55,7 +55,7 @@ const Skills = memo(function Skills() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6">
+    <section className="w-full max-w-5xl mx-auto py-14 sm:py-20 px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ const Skills = memo(function Skills() {
         className="mb-12"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">Skills</p>
-        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Tech I work <span className="gradient-text">with</span>
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">Languages, frameworks, and tools in my daily toolkit.</p>
@@ -83,12 +83,12 @@ const Skills = memo(function Skills() {
         </motion.div>
 
         {/* Soft Skills + What I Bring */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm"
+            className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm"
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-4">Soft Skills</p>
             <div className="flex flex-wrap gap-2">
@@ -105,7 +105,7 @@ const Skills = memo(function Skills() {
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3, duration: 0.4 }}
-            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm"
+            className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm"
           >
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-4">What I Bring</p>
             <ul className="space-y-3">

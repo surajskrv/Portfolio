@@ -28,7 +28,7 @@ const Contact = memo(function Contact() {
   );
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6">
+    <section className="w-full max-w-5xl mx-auto py-14 sm:py-20 px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,14 +37,14 @@ const Contact = memo(function Contact() {
         className="mb-12"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">Contact</p>
-        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Let's work <span className="gradient-text">together</span>
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">Reach out through any of these channels — I'd love to connect.</p>
       </motion.div>
 
       {/* Contact Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
         {CONTACTS.map((c, i) => (
           <motion.a key={c.label}
             href={c.href || undefined}
@@ -55,7 +55,7 @@ const Contact = memo(function Contact() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.06, duration: 0.4 }}
             whileHover={{ y: -4 }}
-            className="group p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300"
+            className="group p-4 sm:p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300"
           >
             <div className={`w-10 h-10 ${c.accent} rounded-xl flex items-center justify-center text-white text-sm mb-3 shadow-md group-hover:scale-110 transition-transform duration-300`}>
               {c.icon}
@@ -72,7 +72,7 @@ const Contact = memo(function Contact() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-8 sm:p-10 shadow-xl shadow-indigo-500/20"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-6 sm:p-8 md:p-10 shadow-xl shadow-indigo-500/20"
       >
         {/* Spotlight */}
         <motion.div className="absolute inset-0 pointer-events-none hidden sm:block" style={{ background: spotlightBg }} />
@@ -89,9 +89,9 @@ const Contact = memo(function Contact() {
             </span>
             <span className="text-xs text-white/80 font-semibold uppercase tracking-widest">Available</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">Have a project in mind?</h3>
-          <p className="text-white/70 text-sm mb-7 leading-relaxed">I'd love to hear about your ideas. Let's build something great together.</p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-white mb-2 sm:mb-3">Have a project in mind?</h3>
+          <p className="text-white/70 text-xs sm:text-sm mb-5 sm:mb-7 leading-relaxed">I'd love to hear about your ideas. Let's build something great together.</p>
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2.5 sm:gap-3">
             <motion.a href="mailto:surajskrv@gmail.com?subject=Project Inquiry" target="_blank"
               className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-colors text-sm shadow-lg"
               whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>

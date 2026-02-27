@@ -18,8 +18,8 @@ const Footer = memo(function Footer() {
 
   return (
     <footer className="w-full border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-4">
             <span className="font-display font-extrabold text-lg text-gray-900 dark:text-white">SK<span className="text-indigo-500">.</span></span>
             <div className="flex gap-1">

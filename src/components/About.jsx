@@ -29,29 +29,29 @@ const About = memo(function About() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-20 px-4 sm:px-6">
+    <section className="w-full max-w-5xl mx-auto py-14 sm:py-20 px-4 sm:px-6">
       {/* Header */}
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} transition={{ duration: 0.5 }} className="mb-12">
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">About</p>
-        <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
           A little about <span className="gradient-text">me</span>
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-lg">My background, education, and what drives me as a developer.</p>
       </motion.div>
 
-      <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* Left Column */}
         <div className="lg:col-span-5 space-y-5">
           {/* Bio */}
           <motion.div initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={fadeUp} transition={{ delay: 0.1, duration: 0.4 }}
-            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
+            className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-3">Who I Am</p>
             <p className="text-gray-600 dark:text-gray-300 text-[14px] leading-[1.75]">{whoIAmText}</p>
           </motion.div>
 
           {/* Strengths */}
           <motion.div initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={fadeUp} transition={{ delay: 0.2, duration: 0.4 }}
-            className="p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
+            className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 mb-4">Key Strengths</p>
             <div className="flex flex-wrap gap-2">
               {keyStrengths.map((s, i) => (
@@ -79,7 +79,7 @@ const About = memo(function About() {
               initial={{ opacity: 0, x: 20 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ delay: 0.15 + i * 0.1, duration: 0.4 }}
-              className="group p-5 rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 backdrop-blur-sm">
+              className="group p-4 sm:p-5 rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 backdrop-blur-sm">
               <div className="flex items-start gap-4">
                 <div className={`w-10 h-10 ${edu.accent} rounded-xl flex items-center justify-center flex-shrink-0 text-white text-sm shadow-md`}>
                   {edu.icon}
