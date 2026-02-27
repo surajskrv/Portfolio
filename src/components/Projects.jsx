@@ -4,11 +4,11 @@ import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch } from 'react-icons/f
 
 // Animation variants
 const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, type: 'spring', stiffness: 100 },
+    transition: { delay: i * 0.15, duration: 0.6, type: 'spring', stiffness: 80 },
   }),
 };
 
@@ -38,7 +38,7 @@ const languageColors = {
   SQL: 'bg-orange-500',
 };
 
-const USE_LOCAL_DATA = true; // Toggle this: true = Local, false = API
+const USE_LOCAL_DATA = true;
 
 const fallbackProjects = [
   {
@@ -76,28 +76,49 @@ const fallbackProjects = [
   },
 ];
 
+// Shimmer skeleton card
+function SkeletonCard() {
+  return (
+    <div className="rounded-2xl border border-gray-200/60 dark:border-white/5 overflow-hidden">
+      <div className="p-6 space-y-4">
+        <div className="h-6 w-2/3 rounded-lg shimmer" />
+        <div className="space-y-2">
+          <div className="h-3 w-full rounded shimmer" />
+          <div className="h-3 w-5/6 rounded shimmer" />
+          <div className="h-3 w-4/6 rounded shimmer" />
+        </div>
+        <div className="flex gap-2 pt-2">
+          <div className="h-6 w-16 rounded-full shimmer" />
+          <div className="h-6 w-16 rounded-full shimmer" />
+          <div className="h-6 w-16 rounded-full shimmer" />
+        </div>
+      </div>
+      <div className="p-4 border-t border-gray-200/60 dark:border-white/5 flex gap-3">
+        <div className="h-9 flex-1 rounded-lg shimmer" />
+        <div className="h-9 flex-1 rounded-lg shimmer" />
+      </div>
+    </div>
+  );
+}
+
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // Note: 'usingFallback' isn't used in UI currently, but good for debugging
   const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
-      // 1. Check local configuration
       if (USE_LOCAL_DATA) {
         setTimeout(() => {
             setProjects(fallbackProjects);
             setUsingFallback(true);
             setLoading(false);
-        }, 300);
+        }, 600);
         return;
       }
 
-      // 2. Fetch from GitHub
       try {
         console.log("Mode: Online Fetch");
         const response = await fetch('https://api.github.com/users/surajskrv/repos?sort=updated&per_page=10');
@@ -118,7 +139,6 @@ function Projects() {
             demo: repo.homepage || '',
             stars: repo.stargazers_count,
             forks: repo.forks_count,
-            // Normalize language to always be an Array
             language: repo.language ? [repo.language] : [],
             topics: repo.topics || [],
           }))
@@ -146,23 +166,26 @@ function Projects() {
   }, []);
 
   return (
-    <section className="w-full max-w-6xl mx-auto py-12 px-4">
-      {/* Header - Always visible to prevent layout shift */}
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold gradient-text mb-4">Featured Projects</h2>
+    <section className="w-full max-w-6xl mx-auto py-16 px-4">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-14"
+      >
+        <h2 className="text-4xl font-display font-bold gradient-text mb-4">Featured Projects</h2>
         <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full mb-6"></div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+        <p className="text-gray-500 dark:text-gray-400 text-base max-w-2xl mx-auto">
           Here are some of my recent projects showcasing my skills in web development.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Conditional Rendering: Loader vs Grid */}
+      {/* Conditional Rendering: Skeleton vs Grid */}
       {loading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading projects...</p>
-          </div>
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : (
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -174,27 +197,30 @@ function Projects() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={cardVariants}
-              className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-500 hover:scale-105"
+              className="group relative bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200/60 dark:border-white/5 overflow-hidden transition-all duration-500 hover:border-indigo-300/50 dark:hover:border-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/5"
             >
+              {/* Gradient top accent */}
+              <div className="h-1 w-full bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
               {/* Project Header */}
               <div className="p-6 pb-4">
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  <h3 className="text-xl font-display font-bold text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
                     {project.title.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   </h3>
                   <div className="flex items-center gap-3 text-sm">
-                    <div className="flex items-center gap-1 text-yellow-600">
-                      <FaStar className="text-sm" />
-                      <span className="font-medium">{project.stars}</span>
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      <FaStar className="text-xs" />
+                      <span className="font-medium text-gray-500 dark:text-gray-400">{project.stars}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-blue-600">
-                      <FaCodeBranch className="text-sm" />
-                      <span className="font-medium">{project.forks}</span>
+                    <div className="flex items-center gap-1 text-blue-500">
+                      <FaCodeBranch className="text-xs" />
+                      <span className="font-medium text-gray-500 dark:text-gray-400">{project.forks}</span>
                     </div>
                   </div>
                 </div>
                 
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
                   {project.description}
                 </p>
               </div>
@@ -202,17 +228,15 @@ function Projects() {
               {/* Project Tags */}
               <div className="px-6 pb-4">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {/* Languages - Logic Simplified */}
                   {project.language.slice(0, 3).map((lang) => (
-                    <span key={lang} className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full font-medium">
-                      <div className={`w-2 h-2 rounded-full ${languageColors[lang] || 'bg-gray-500'}`}></div>
+                    <span key={lang} className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 text-xs rounded-full font-medium border border-indigo-200/50 dark:border-indigo-700/30">
+                      <div className={`w-1.5 h-1.5 rounded-full ${languageColors[lang] || 'bg-gray-500'}`}></div>
                       {lang}
                     </span>
                   ))}
                   
-                  {/* Topics */}
                   {project.topics && project.topics.slice(0, 2).map((topic) => (
-                    <span key={topic} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">
+                    <span key={topic} className="px-3 py-1 bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 text-xs rounded-full border border-gray-200/50 dark:border-white/5">
                       {topic}
                     </span>
                   ))}
@@ -220,14 +244,14 @@ function Projects() {
               </div>
 
               {/* Project Footer */}
-              <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-6 py-4 border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/[0.02]">
                 <div className="flex gap-3">
                   <motion.a
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-gray-800 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
-                    whileHover={{ scale: 1.02 }}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gray-800 dark:bg-white/10 text-white rounded-xl hover:bg-gray-700 dark:hover:bg-white/20 transition-all duration-300 text-sm font-medium"
+                    whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <FaGithub />
@@ -238,11 +262,11 @@ function Projects() {
                       href={project.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
-                      whileHover={{ scale: 1.02 }}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white rounded-xl transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md hover:shadow-indigo-400/15"
+                      whileHover={{ scale: 1.02, y: -1 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <FaExternalLinkAlt />
+                      <FaExternalLinkAlt className="text-xs" />
                       Demo
                     </motion.a>
                   )}
@@ -253,7 +277,7 @@ function Projects() {
         </div>
       )}
       
-      {/* View More Button - Only shows when not loading */}
+      {/* View More Button */}
       {!loading && projects.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -262,15 +286,17 @@ function Projects() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="text-center mt-12"
         >
-          <a
+          <motion.a
             href="https://github.com/surajskrv"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            className="group inline-flex items-center gap-3 px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:shadow-indigo-400/15 transition-all duration-300"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <FaGithub />
+            <FaGithub className="text-lg" />
             View All Projects on GitHub
-          </a>
+          </motion.a>
         </motion.div>
       )}
     </section>

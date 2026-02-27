@@ -22,20 +22,28 @@ function App() {
   }, [darkMode]);
 
   return (
-    <div className="bg-white text-black dark:bg-gray-950 dark:text-gray-100 min-h-screen w-full font-sans scroll-smooth m-0 p-0 overflow-x-hidden">
+    <div className="bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 min-h-screen w-full font-sans scroll-smooth m-0 p-0 overflow-x-hidden">
       <Helmet>
         <html lang="en" />
-        <title>Suraj-Portfolio</title>
-        <meta name="description" content="Portfolio of a Full Stack Developer: projects, skills, resume, and contact info." />
+        <title>Suraj Kumar — Full Stack Developer Portfolio</title>
+        <meta name="description" content="Portfolio of Suraj Kumar — Full Stack Developer specializing in React, Node.js, Flask, Vue.js, and MongoDB. View projects, skills, and get in touch." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet>
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-      <main className="flex flex-col items-center justify-center w-full overflow-x-hidden pt-16">
+      <main className="flex flex-col items-center justify-center w-full overflow-x-hidden pt-14">
         <section id="hero" className="w-full"><Hero /></section>
-        <section id="about" className="w-full py-8 bg-white dark:bg-gray-950"><About /></section>
-        <section id="skills" className="w-full py-8 bg-gray-50 dark:bg-gray-900"><Skills /></section>
-        <section id="projects" className="w-full py-8 bg-white dark:bg-gray-950"><Projects /></section>
-        <section id="contact" className="w-full py-8 bg-gray-50 dark:bg-gray-900"><Contact /></section>
+        
+        <div className="section-divider w-full max-w-4xl mx-auto" />
+        <section id="about" className="w-full py-4 bg-white dark:bg-gray-950"><About /></section>
+        
+        <div className="section-divider w-full max-w-4xl mx-auto" />
+        <section id="skills" className="w-full py-4 bg-gray-50/50 dark:bg-gray-900/30"><Skills /></section>
+        
+        <div className="section-divider w-full max-w-4xl mx-auto" />
+        <section id="projects" className="w-full py-4 bg-white dark:bg-gray-950"><Projects /></section>
+        
+        <div className="section-divider w-full max-w-4xl mx-auto" />
+        <section id="contact" className="w-full py-4 bg-gray-50/50 dark:bg-gray-900/30"><Contact /></section>
       </main>
       <Footer />
     </div>
