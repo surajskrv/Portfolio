@@ -2,6 +2,8 @@ import { lazy, Suspense, useState, useEffect, useCallback, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import CustomCursor from './components/CustomCursor';
+import { ScrollTrigger } from './utils/gsap';
 
 const About = lazy(() => import('./components/About'));
 const Skills = lazy(() => import('./components/Skills'));
@@ -22,12 +24,42 @@ function App() {
   );
   const toggleDarkMode = useCallback(() => setDarkMode(dm => !dm), []);
 
+  const [accentTheme, setAccentTheme] = useState(() =>
+    localStorage.getItem('accent-theme') || 'theme-indigo'
+  );
+
+  const changeAccentTheme = useCallback((theme) => {
+    setAccentTheme(theme);
+    localStorage.setItem('accent-theme', theme);
+  }, []);
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
+  useEffect(() => {
+    const themes = ['theme-indigo', 'theme-emerald', 'theme-violet', 'theme-rose', 'theme-amber'];
+    themes.forEach((t) => document.documentElement.classList.remove(t));
+    document.documentElement.classList.add(accentTheme);
+  }, [accentTheme]);
+
+  const [cursorEnabled, setCursorEnabled] = useState(() =>
+    localStorage.getItem('cursor-enabled') !== 'false'
+  );
+
+  useEffect(() => {
+    localStorage.setItem('cursor-enabled', cursorEnabled);
+  }, [cursorEnabled]);
+
+  // Refresh ScrollTrigger on full page load
+  useEffect(() => {
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
+
   return (
-    <div className={`min-h-screen w-full font-sans scroll-smooth m-0 p-0 overflow-x-hidden
+    <div className={`min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden
       bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100
       selection:bg-indigo-100 selection:text-indigo-700 dark:selection:bg-indigo-900/50 dark:selection:text-indigo-300`}>
       <Helmet>
@@ -35,9 +67,12 @@ function App() {
         <title>Suraj Kumar — Full Stack Developer</title>
         <meta name="description" content="Portfolio of Suraj Kumar — Full Stack Developer specializing in React, Node.js, Flask, Vue.js, and MongoDB." />
       </Helmet>
-      <Navbar darkMode={darkMode} setDarkMode={toggleDarkMode} />
+      {cursorEnabled && <CustomCursor />}
+      <Navbar darkMode={darkMode} setDarkMode={toggleDarkMode} accentTheme={accentTheme} setAccentTheme={changeAccentTheme} />
       <main className="flex flex-col w-full overflow-x-hidden">
-        <section id="hero" className="w-full"><Hero /></section>
+        <section id="hero" className="w-full">
+          <Hero accentTheme={accentTheme} cursorEnabled={cursorEnabled} setCursorEnabled={setCursorEnabled} />
+        </section>
 
         <Suspense fallback={<Loader />}>
           <section id="about" className="w-full section-alt"><About /></section>
@@ -56,7 +91,7 @@ function App() {
         </Suspense>
       </main>
       <Suspense fallback={null}>
-        <Footer />
+        <Footer cursorEnabled={cursorEnabled} setCursorEnabled={setCursorEnabled} />
       </Suspense>
     </div>
   );

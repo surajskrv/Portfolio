@@ -8,6 +8,12 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
       },
+      colors: {
+        accent: 'var(--accent-color)',
+        'accent-hover': 'var(--accent-hover)',
+        'accent-light': 'var(--accent-light)',
+        'accent-light-dark': 'var(--accent-light-dark)',
+      },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'float-slow': 'float 8s ease-in-out infinite',

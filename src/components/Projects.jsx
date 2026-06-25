@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch, FaSearch, FaTimes, FaCheckCircle, FaUser } from 'react-icons/fa';
+import { gsap } from '../utils/gsap';
 
 const languageColors = {
   JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572a5', Java: '#f89820',
@@ -12,32 +12,87 @@ const languageColors = {
 const USE_LOCAL_DATA = true;
 
 const fallbackProjects = [
-  { id: 1, title: 'WheelSpot', description: 'A modern, full-stack parking management app built with Flask, Vue.js, and Celery. Real-time booking, admin control, automated reports.', github: 'https://github.com/surajskrv/WheelSpot', demo: 'https://wheelspot.onrender.com/', stars: 0, forks: 0, language: ['Vuejs', 'Flask', 'JavaScript', 'Bootstrap', 'SQL'], topics: ['parking-system'] },
-  { id: 2, title: 'Curanet', description: 'A comprehensive Hospital Management System with role-based access control for Admins, Doctors, and Patients. Vue 3, Flask, SQLite.', github: 'https://github.com/surajskrv/CuraNet', demo: 'https://cura-net.vercel.app/', stars: 0, forks: 0, language: ['Flask', 'Vuejs', 'JavaScript', 'SQL'], topics: ['hospital-management'] },
-  { id: 3, title: 'Flixxit', description: 'A web application inspired by OTT platforms like Netflix & Prime Video. Full-stack streaming experience with MERN stack.', github: 'https://github.com/surajskrv/Flixxit', demo: 'https://flixxit-00r6.onrender.com/', stars: 0, forks: 0, language: ['React', 'Express', 'JavaScript', 'Mongodb'], topics: ['streaming'] },
+  { id: 1, title: 'WheelSpot', description: 'A modern, full-stack parking management app built with Flask, Vue.js, and Celery. Real-time booking, admin control, automated reports.', github: 'https://github.com/surajskrv/WheelSpot', demo: 'https://wheelspot.onrender.com/', stars: 4, forks: 1, language: ['Vuejs', 'Flask', 'JavaScript', 'Bootstrap', 'SQL'], topics: ['parking-system'] },
+  { id: 2, title: 'CuraNet', description: 'A comprehensive Hospital Management System with role-based access control for Admins, Doctors, and Patients. Vue 3, Flask, SQLite.', github: 'https://github.com/surajskrv/CuraNet', demo: 'https://cura-net.vercel.app/', stars: 3, forks: 0, language: ['Flask', 'Vuejs', 'JavaScript', 'SQL'], topics: ['hospital-management'] },
+  { id: 3, title: 'Flixxit', description: 'A web application inspired by OTT platforms like Netflix & Prime Video. Full-stack streaming experience with MERN stack.', github: 'https://github.com/surajskrv/Flixxit', demo: 'https://flixxit-00r6.onrender.com/', stars: 5, forks: 2, language: ['React', 'Express', 'JavaScript', 'Mongodb'], topics: ['streaming'] },
 ];
+
+const projectDetails = {
+  WheelSpot: {
+    features: [
+      'Real-time Parking Slot Availability Tracking',
+      'Advanced Booking and Reservation Engine',
+      'Interactive Visual Map Layout of Parking Lots',
+      'Celery Worker Integration for automated daily PDF reports',
+      'Admin Portal for managing slot status and pricing tiers'
+    ],
+    role: 'Lead Full-Stack Developer — Designed the database models, wrote Flask REST APIs, and built the Vue 3 user dashboard from scratch.'
+  },
+  CuraNet: {
+    features: [
+      'Role-based authentication & route protection (Admin, Doctor, Patient)',
+      'Digital Medical Records management & doctor prescriptions writer',
+      'Appointment Scheduling system with calendar reminders',
+      'Comprehensive administrative dashboards monitoring clinical metrics',
+      'Lightweight SQL backend using Flask and SQLite with automated seed data'
+    ],
+    role: 'Database & Backend architect — Modeled the SQLite schema, implemented JWT secure authentication flow, and built doctors clinical dashboard.'
+  },
+  Flixxit: {
+    features: [
+      'Video streaming engine supporting chunked content delivery',
+      'Dynamic search, filters, and watch-later list state',
+      'Interactive hero slider with dynamic movie banners',
+      'Fully responsive UI matching premium streaming platforms',
+      'Secure MongoDB storage for user preferences and playback records'
+    ],
+    role: 'Frontend & UI Developer — Crafted custom media players, optimized page responsiveness, and integrated Express server routes.'
+  }
+};
 
 const TiltCard = memo(function TiltCard({ children, className }) {
   const ref = useRef(null);
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [5, -5]), { stiffness: 200, damping: 25 });
-  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-5, 5]), { stiffness: 200, damping: 25 });
+
+  useEffect(() => {
+    if (!ref.current) return;
+    gsap.set(ref.current, { transformPerspective: 1200 });
+  }, []);
 
   const onMove = useCallback((e) => {
     if (!ref.current) return;
     const r = ref.current.getBoundingClientRect();
-    rawX.set((e.clientX - r.left) / r.width - 0.5);
-    rawY.set((e.clientY - r.top) / r.height - 0.5);
-  }, [rawX, rawY]);
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    gsap.to(ref.current, {
+      rotateX: y * -8,
+      rotateY: x * 8,
+      duration: 0.4,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  }, []);
 
-  const onLeave = useCallback(() => { rawX.set(0); rawY.set(0); }, [rawX, rawY]);
+  const onLeave = useCallback(() => {
+    if (!ref.current) return;
+    gsap.to(ref.current, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.6,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    });
+  }, []);
 
   return (
-    <motion.div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
-      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }} className={className}>
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className={className}
+      style={{ transformStyle: 'preserve-3d' }}
+    >
       {children}
-    </motion.div>
+    </div>
   );
 });
 
@@ -60,6 +115,10 @@ function SkeletonCard() {
 const Projects = memo(function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedProject, setSelectedProject] = useState(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     if (USE_LOCAL_DATA) {
@@ -68,97 +127,286 @@ const Projects = memo(function Projects() {
     }
     (async () => {
       try {
-        const res = await fetch('https://api.github.com/users/surajskrv/repos?sort=updated&per_page=10');
+        const res = await fetch('https://api.github.com/users/surajskrv/repos?sort=updated&per_page=15');
         if (!res.ok) throw new Error();
         const repos = await res.json();
         const filtered = repos.filter(r => !r.fork && r.description && r.name !== 'Portfolio')
-          .map(r => ({ id: r.id, title: r.name, description: r.description, github: r.html_url, demo: r.homepage || '', stars: r.stargazers_count, forks: r.forks_count, language: r.language ? [r.language] : [], topics: r.topics || [] }))
-          .slice(0, 3);
+          .map(r => ({ id: r.id, title: r.name, description: r.description, github: r.html_url, demo: r.homepage || '', stars: r.stargazers_count, forks: r.forks_count, language: r.language ? [r.language] : [], topics: r.topics || [] }));
         setProjects(filtered.length ? filtered : fallbackProjects);
       } catch { setProjects(fallbackProjects); }
       finally { setLoading(false); }
     })();
   }, []);
 
+  // ScrollTrigger animations
+  useEffect(() => {
+    if (loading || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.projects-header',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.projects-header',
+            start: 'top 85%',
+            once: true,
+          },
+        }
+      );
+
+      gsap.fromTo('.project-card',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.projects-grid',
+            start: 'top 85%',
+            once: true,
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [loading]);
+
+  const filteredProjects = projects.filter(project => {
+    const titleMatch = project.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const descMatch = project.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const langMatch = project.language.some(lang => lang.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = titleMatch || descMatch || langMatch;
+
+    if (activeFilter === 'All') return matchesSearch;
+    if (activeFilter === 'Flask') return matchesSearch && project.language.some(l => l.toLowerCase() === 'flask');
+    if (activeFilter === 'React') return matchesSearch && project.language.some(l => l.toLowerCase() === 'react');
+    if (activeFilter === 'Vue.js') return matchesSearch && project.language.some(l => l.toLowerCase().includes('vue'));
+    if (activeFilter === 'MERN') return matchesSearch && (project.language.some(l => ['mongodb', 'express', 'react', 'node'].includes(l.toLowerCase())));
+
+    return matchesSearch;
+  });
+
   return (
-    <section className="w-full max-w-5xl mx-auto py-14 sm:py-20 px-4 sm:px-6" style={{ perspective: '1200px' }}>
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-12"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-indigo-500 dark:text-indigo-400 mb-2">Projects</p>
+    <section ref={sectionRef} className="w-full max-w-5xl mx-auto py-12 sm:py-16 px-4 sm:px-6 relative" style={{ perspective: '1200px' }}>
+      
+      {/* Header */}
+      <div className="projects-header mb-12 flex flex-col text-left">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-2">Projects</p>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white">
           Featured <span className="gradient-text">work</span>
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">A selection of recent projects showcasing full-stack skills.</p>
-      </motion.div>
+        
+        {/* Search & Filter Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
+          
+          {/* Category Tabs */}
+          <div className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl select-none border border-gray-200/50 dark:border-white/5 w-fit flex-wrap">
+            {['All', 'Flask', 'React', 'Vue.js', 'MERN'].map(filter => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`cursor-pointer transition-all duration-300 font-bold px-3 py-1.5 rounded-xl text-xs border-none bg-transparent
+                  ${activeFilter === filter
+                    ? 'text-accent bg-white dark:bg-white/10 shadow-md'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white'
+                  }`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
 
+          {/* Search Box */}
+          <div className="relative max-w-xs w-full">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
+              <FaSearch size={12} />
+            </span>
+            <input
+              type="text"
+              placeholder="Search tech, name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-850 rounded-2xl focus:outline-none focus:border-accent dark:focus:border-accent text-gray-800 dark:text-gray-150 transition-colors shadow-inner"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Grid */}
       {loading ? (
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {[1,2,3].map(i => <SkeletonCard key={i} />)}
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
+        </div>
+      ) : filteredProjects.length === 0 ? (
+        <div className="text-center py-16 bg-gray-50 dark:bg-gray-900/10 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800">
+          <p className="text-gray-400 text-sm font-semibold">No projects match your criteria.</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => (
-            <motion.div key={project.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}>
-              <TiltCard className="h-full rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-500/20 transition-all duration-300 group backdrop-blur-sm">
-                {/* Gradient accent */}
-                <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="projects-grid grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-left">
+          {filteredProjects.map((project, index) => {
+            const prettyName = project.title.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return (
+              <div key={project.id} className="project-card">
+                <TiltCard className="h-full rounded-2xl bg-white/80 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-lg hover:border-accent-light dark:hover:border-accent-light-dark transition-all duration-300 group backdrop-blur-sm flex flex-col justify-between">
+                  <div>
+                    {/* Gradient accent top line */}
+                    <div className="h-1 w-full bg-gradient-to-r from-accent via-purple-500 to-pink-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
 
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-base font-display font-bold text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {project.title.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </h3>
-                    <div className="flex items-center gap-2.5 text-xs text-gray-400 dark:text-gray-500">
-                      <span className="flex items-center gap-1"><FaStar className="text-amber-400" />{project.stars}</span>
-                      <span className="flex items-center gap-1"><FaCodeBranch />{project.forks}</span>
+                    <div className="p-4 sm:p-6 pb-2">
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="text-base font-display font-bold text-gray-800 dark:text-gray-100 group-hover:text-accent transition-colors">
+                          {prettyName}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+                          <span className="flex items-center gap-1"><FaStar className="text-amber-400" />{project.stars}</span>
+                          <span className="flex items-center gap-1"><FaCodeBranch />{project.forks}</span>
+                        </div>
+                      </div>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">{project.description}</p>
+                      
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {project.language.slice(0, 4).map(lang => (
+                          <span key={lang} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-gray-950/40 text-gray-600 dark:text-gray-400 text-[11px] rounded-full font-medium border border-gray-100 dark:border-gray-850">
+                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: languageColors[lang] || '#9ca3af' }} />
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">{project.description}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.language.slice(0, 4).map(lang => (
-                      <span key={lang} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-[11px] rounded-full font-medium border border-gray-100 dark:border-gray-700">
-                        <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: languageColors[lang] || '#9ca3af' }} />
-                        {lang}
-                      </span>
-                    ))}
-                  </div>
-                </div>
 
-                <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 dark:border-gray-800 flex gap-2 sm:gap-3">
-                  <a href={project.github} target="_blank" rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-900 dark:bg-gray-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-xs font-semibold shadow-sm">
-                    <FaGithub /> Source
-                  </a>
-                  {project.demo && (
-                    <a href={project.demo} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 transition-colors text-xs font-semibold shadow-sm shadow-indigo-500/20">
-                      <FaExternalLinkAlt className="text-[10px]" /> Live
-                    </a>
-                  )}
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
+                  <div className="px-4 sm:px-6 py-4 flex flex-col gap-2">
+                    <button
+                      onClick={() => setSelectedProject(project)}
+                      className="w-full text-center text-xs font-bold text-accent hover:underline py-1 bg-transparent border-none cursor-pointer"
+                    >
+                      Read Specifications
+                    </button>
+                    <div className="border-t border-gray-100 dark:border-gray-800 pt-3 flex gap-2">
+                      <a href={project.github} target="_blank" rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-900 dark:bg-gray-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-xs font-semibold shadow-sm">
+                        <FaGithub /> Source
+                      </a>
+                      {project.demo && (
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer"
+                          className="flex-1 flex items-center justify-center gap-2 py-2 bg-accent text-white rounded-xl hover:bg-accent-hover transition-colors text-xs font-semibold shadow-sm shadow-accent/20">
+                          <FaExternalLinkAlt className="text-[10px]" /> Live
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </TiltCard>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {!loading && (
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="text-center mt-12">
+      {/* GitHub CTA */}
+      {!loading && filteredProjects.length > 0 && (
+        <div className="projects-cta text-center mt-10">
           <a href="https://github.com/surajskrv" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-gray-800 text-white font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-sm shadow-md">
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-gray-800 text-white font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-sm shadow-md hover:-translate-y-0.5 transition-transform duration-200">
             <FaGithub /> View all on GitHub
           </a>
-        </motion.div>
+        </div>
       )}
+
+      {/* Glassmorphic Project Details Modal */}
+      {selectedProject && (() => {
+        const details = projectDetails[selectedProject.title] || {
+          features: ['Dynamic state integrations', 'Full-stack client-server data synchronization', 'Interactive user panels'],
+          role: 'Full Stack developer — implemented client modules and database connections.'
+        };
+        const prettyName = selectedProject.title.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        return (
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+            onClick={() => setSelectedProject(null)}
+          >
+            <div
+              className="relative max-w-xl w-full rounded-2xl border border-gray-200/50 dark:border-white/10 bg-white dark:bg-gray-900 shadow-2xl p-6 md:p-8 animate-in zoom-in-95 duration-200 text-left overflow-y-auto max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 p-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 transition-colors border-none cursor-pointer"
+                aria-label="Close modal"
+              >
+                <FaTimes size={14} />
+              </button>
+
+              <h3 className="text-xl sm:text-2xl font-display font-black text-gray-900 dark:text-white mb-2">
+                {prettyName}
+              </h3>
+
+              {/* Technologies */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {selectedProject.language.map(lang => (
+                  <span key={lang} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-gray-950/40 text-gray-600 dark:text-gray-400 text-[10px] rounded-full font-bold border border-gray-150 dark:border-gray-800">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: languageColors[lang] || '#9ca3af' }} />
+                    {lang}
+                  </span>
+                ))}
+              </div>
+
+              {/* Role */}
+              <div className="mb-6 p-4 rounded-xl bg-accent-light dark:bg-accent-light-dark border border-accent/10 flex gap-3">
+                <FaUser className="text-accent flex-shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm">
+                  <span className="font-bold text-gray-800 dark:text-gray-200 block mb-0.5">My Role &amp; Focus</span>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{details.role}</p>
+                </div>
+              </div>
+
+              {/* Core Features */}
+              <div className="mb-6">
+                <span className="text-xs font-bold uppercase tracking-widest text-accent block mb-3">Core Features &amp; Implementation</span>
+                <ul className="space-y-2.5">
+                  {details.features.map((feature, i) => (
+                    <li key={i} className="flex gap-2.5 text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                      <FaCheckCircle className="text-emerald-500 mt-0.5 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 mt-8 border-t border-gray-100 dark:border-gray-800 pt-4">
+                <a
+                  href={selectedProject.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 dark:bg-gray-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-gray-700 transition-all text-xs sm:text-sm font-semibold shadow-sm"
+                >
+                  <FaGithub /> Source Code
+                </a>
+                {selectedProject.demo && (
+                  <a
+                    href={selectedProject.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-accent text-white rounded-xl hover:bg-accent-hover transition-all text-xs sm:text-sm font-semibold shadow-sm shadow-accent/20"
+                  >
+                    <FaExternalLinkAlt size={10} /> Live Deployment
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </section>
   );
 });

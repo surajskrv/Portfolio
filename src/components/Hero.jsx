@@ -1,6 +1,7 @@
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaDownload, FaArrowRight } from 'react-icons/fa';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { gsap } from '../utils/gsap';
+import Terminal from './Terminal';
 
 const handleResumeDownload = () => {
   try {
@@ -14,7 +15,15 @@ const handleResumeDownload = () => {
   } catch { window.open('/Resume.pdf', '_blank'); }
 };
 
-const roles = ["Full Stack Developer","Python Developer", "MERN Developer", "AI Enthusiast", "Flask Developer"];
+const roles = ["Full Stack Developer", "Python Developer", "MERN Developer", "AI Enthusiast", "Flask Developer"];
+
+const themeColors = {
+  'theme-indigo': '#4f46e5',
+  'theme-emerald': '#059669',
+  'theme-violet': '#7c3aed',
+  'theme-rose': '#e11d48',
+  'theme-amber': '#d97706',
+};
 
 function TypingEffect() {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -38,9 +47,9 @@ function TypingEffect() {
   }, [text, isDeleting, roleIndex]);
 
   return (
-    <span className="text-indigo-600 dark:text-indigo-400">
+    <span className="text-accent">
       {text}
-      <span className="inline-block w-[2px] h-[1.1em] bg-indigo-500 dark:bg-indigo-400 ml-0.5 align-middle animate-pulse" />
+      <span className="inline-block w-[2px] h-[1.1em] bg-accent ml-0.5 align-middle animate-pulse" />
     </span>
   );
 }
@@ -66,133 +75,298 @@ function AnimatedCounter({ value, label }) {
   return (
     <div ref={ref} className="text-center min-w-0">
       <div className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-gray-900 dark:text-white">
-        {count}<span className="text-indigo-500 dark:text-indigo-400">+</span>
+        {count}<span className="text-accent">+</span>
       </div>
       <div className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">{label}</div>
     </div>
   );
 }
 
-function Hero() {
+function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
   const sectionRef = useRef(null);
-  const mX = useMotionValue(0);
-  const mY = useMotionValue(0);
-  const sx = useSpring(mX, { stiffness: 40, damping: 20 });
-  const sy = useSpring(mY, { stiffness: 40, damping: 20 });
+  const spotlightRef = useRef(null);
+  const canvasRef = useRef(null);
+  const xToRef = useRef(null);
+  const yToRef = useRef(null);
+  const activeColorRef = useRef('#4f46e5');
+
+  // Track active accent theme hex color changes inside a ref
+  useEffect(() => {
+    activeColorRef.current = themeColors[accentTheme] || '#4f46e5';
+  }, [accentTheme]);
+
+  // Canvas particle backdrop logic
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let width = (canvas.width = canvas.offsetWidth);
+    let height = (canvas.height = canvas.offsetHeight);
+
+    const particles = [];
+    const particleCount = Math.min(50, Math.floor((width * height) / 25000));
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 1,
+      });
+    }
+
+    let mouseX = null;
+    let mouseY = null;
+
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouseX = null;
+      mouseY = null;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Fetch dynamic active color from ref (no layout reflow forced!)
+      const accent = activeColorRef.current;
+      ctx.fillStyle = accent;
+      ctx.strokeStyle = accent;
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        // Draw particle node
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.globalAlpha = 0.2;
+        ctx.fill();
+
+        // Mouse repulsion
+        if (mouseX !== null && mouseY !== null) {
+          const dx = p.x - mouseX;
+          const dy = p.y - mouseY;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 100) {
+            const force = (100 - dist) / 100;
+            p.x += (dx / dist) * force * 1.2;
+            p.y += (dy / dist) * force * 1.2;
+          }
+        }
+      });
+
+      // Draw linkage lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.globalAlpha = ((110 - dist) / 110) * 0.1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animationId = requestAnimationFrame(draw);
+    };
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // GSAP entrance timeline
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.from('.hero-name', { opacity: 0, y: 35, duration: 0.7 })
+        .from('.hero-role', { opacity: 0, y: 20, duration: 0.5 }, '-=0.35')
+        .from('.hero-desc', { opacity: 0, y: 20, duration: 0.5 }, '-=0.3')
+        .from('.hero-cta', { opacity: 0, y: 20, duration: 0.5 }, '-=0.25')
+        .from('.hero-stats', { opacity: 0, y: 20, duration: 0.5 }, '-=0.2')
+        .from('.hero-socials', { opacity: 0, duration: 0.4 }, '-=0.15')
+        .from('.hero-terminal', { opacity: 0, x: 40, duration: 0.8 }, '-=0.6')
+        .from('.hero-scroll', { opacity: 0, duration: 0.6 }, '-=0.1');
+
+      // Scroll indicator bounce
+      gsap.to('.hero-scroll-line', {
+        y: 6,
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'power1.inOut',
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Mouse spotlight (desktop only)
+  useEffect(() => {
+    if (!spotlightRef.current) return;
+    xToRef.current = gsap.quickTo(spotlightRef.current, '--spot-x', { duration: 0.5, ease: 'power3.out' });
+    yToRef.current = gsap.quickTo(spotlightRef.current, '--spot-y', { duration: 0.5, ease: 'power3.out' });
+  }, []);
 
   const onMouseMove = useCallback((e) => {
     if (!sectionRef.current) return;
     const r = sectionRef.current.getBoundingClientRect();
-    mX.set(e.clientX - r.left);
-    mY.set(e.clientY - r.top);
-  }, [mX, mY]);
-
-  const spotlightBg = useTransform([sx, sy], ([x, y]) =>
-    `radial-gradient(600px circle at ${x}px ${y}px, rgba(99, 102, 241, 0.06), transparent 60%)`
-  );
+    xToRef.current?.(e.clientX - r.left);
+    yToRef.current?.(e.clientY - r.top);
+  }, []);
 
   return (
-    <section ref={sectionRef} onMouseMove={onMouseMove}
-      className="relative flex flex-col items-center justify-center min-h-screen w-full text-center select-none overflow-hidden">
-
+    <section
+      ref={sectionRef}
+      onMouseMove={onMouseMove}
+      className="relative flex flex-col items-center justify-center min-h-screen w-full text-center lg:text-left select-none overflow-hidden py-16 sm:py-24"
+    >
       {/* BG gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/80 via-white to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950" />
 
-      {/* Mouse spotlight (desktop only) */}
-      <motion.div className="absolute inset-0 pointer-events-none z-[1] hidden md:block" style={{ background: spotlightBg }} />
+      {/* Dynamic Canvas Particles */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-[2]" />
 
-      {/* Decorative blobs — responsive sizes */}
+      {/* Mouse spotlight (desktop only) */}
+      <div
+        ref={spotlightRef}
+        className="absolute inset-0 pointer-events-none z-[1] hidden md:block"
+        style={{
+          '--spot-x': '50%',
+          '--spot-y': '50%',
+          background: 'radial-gradient(600px circle at var(--spot-x) var(--spot-y), rgba(var(--accent-color), 0.04), transparent 60%)',
+        }}
+      />
+
+      {/* Decorative blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-64 sm:w-80 md:w-[500px] h-64 sm:h-80 md:h-[500px] opacity-30 dark:opacity-[0.08] gpu animate-blob"
-          style={{ background: 'radial-gradient(circle, #818cf8, transparent 70%)', top: '-15%', right: '-10%', filter: 'blur(80px)' }} />
+          style={{ background: 'radial-gradient(circle, var(--accent-color), transparent 70%)', top: '-15%', right: '-10%', filter: 'blur(80px)' }} />
         <div className="absolute w-52 sm:w-72 md:w-[400px] h-52 sm:h-72 md:h-[400px] opacity-20 dark:opacity-[0.06] gpu animate-blob"
           style={{ background: 'radial-gradient(circle, #e879f9, transparent 70%)', bottom: '5%', left: '-8%', filter: 'blur(80px)', animationDelay: '-3s' }} />
-        <div className="absolute w-40 sm:w-56 md:w-[300px] h-40 sm:h-56 md:h-[300px] opacity-15 dark:opacity-[0.04] gpu animate-blob hidden sm:block"
-          style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)', top: '40%', left: '55%', filter: 'blur(100px)', animationDelay: '-5s' }} />
       </div>
 
       {/* Dot grid */}
-      <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
-        style={{ backgroundImage: 'radial-gradient(circle, #6366f1 0.8px, transparent 0.8px)', backgroundSize: '28px 28px' }} />
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]"
+        style={{ backgroundImage: 'radial-gradient(circle, var(--accent-color) 0.8px, transparent 0.8px)', backgroundSize: '28px 28px' }} />
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 sm:px-6 pt-20">
-        {/* Badge */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-5 sm:mb-6">
-          <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/80 dark:bg-white/[0.05] text-gray-600 dark:text-gray-400 font-medium border border-gray-200 dark:border-white/10 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            Available for work
-          </span>
-        </motion.div>
+      {/* Two-Column Responsive Grid Content */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        
+        {/* Left Column: Bio Details */}
+        <div className="lg:col-span-7 flex flex-col justify-center">
+          {/* Name */}
+          <h1 className="hero-name text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black mb-3 sm:mb-4 tracking-tight leading-[0.95] text-center lg:text-left">
+            <span className="text-gray-900 dark:text-white">Suraj </span>
+            <span className="gradient-text">Kumar</span>
+          </h1>
 
-        {/* Name */}
-        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black mb-3 sm:mb-4 tracking-tight leading-[0.95]">
-          <span className="text-gray-900 dark:text-white">Suraj </span>
-          <span className="gradient-text">Kumar</span>
-        </motion.h1>
+          {/* Role */}
+          <div className="hero-role mb-3 sm:mb-4 text-center lg:text-left">
+            <p className="text-sm sm:text-base md:text-lg font-display font-medium text-gray-600 dark:text-gray-400">
+              I'm a <TypingEffect />
+            </p>
+          </div>
 
-        {/* Role */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="mb-3 sm:mb-4">
-          <p className="text-sm sm:text-base md:text-lg font-display font-medium text-gray-600 dark:text-gray-400">
-            I'm a <TypingEffect />
+          {/* Description */}
+          <p className="hero-desc text-gray-500 dark:text-gray-400 max-w-lg mb-6 sm:mb-8 text-xs sm:text-sm md:text-[15px] leading-relaxed text-center lg:text-left mx-auto lg:mx-0 px-2 lg:px-0">
+            Building scalable web apps with React, Flask &amp; Node.js.
+            Turning complex problems into clean, fast experiences.
           </p>
-        </motion.div>
 
-        {/* Description */}
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto mb-6 sm:mb-8 text-xs sm:text-sm md:text-[15px] leading-relaxed px-2">
-          Building scalable web apps with React, Flask & Node.js.
-          Turning complex problems into clean, fast experiences.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center mb-8 sm:mb-10 px-4 sm:px-0">
-          <button onClick={handleResumeDownload}
-            className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30">
-            <FaDownload className="text-xs group-hover:-translate-y-0.5 transition-transform" /> Resume
-          </button>
-          <a href="#projects"
-            className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-indigo-300 dark:hover:border-indigo-500/30 hover:text-indigo-600 dark:hover:text-indigo-400 font-semibold rounded-xl transition-all duration-200 text-sm shadow-sm">
-            View Work <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
-          </a>
-        </motion.div>
-
-        {/* Stats */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.0 }}
-          className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 px-4 sm:px-8 py-3.5 sm:py-4 bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/50 dark:border-white/5 backdrop-blur-sm shadow-sm mb-6 sm:mb-8 mx-auto w-fit">
-          <AnimatedCounter value={10} label="Projects" />
-          <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
-          <AnimatedCounter value={10} label="Technologies" />
-          <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
-          <AnimatedCounter value={1} label="Certifications" />
-        </motion.div>
-
-        {/* Socials */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="flex gap-2.5 sm:gap-3 justify-center">
-          {[
-            { Icon: FaGithub, href: 'https://github.com/surajskrv', label: 'GitHub' },
-            { Icon: FaLinkedin, href: 'https://linkedin.com/in/surajskr', label: 'LinkedIn' },
-          ].map(({ Icon, href, label }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              className="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-all duration-200 border border-gray-200 dark:border-gray-700 shadow-sm"
-              aria-label={label}>
-              <Icon className="text-base sm:text-lg" />
+          {/* CTAs */}
+          <div className="hero-cta flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center lg:justify-start mb-8 sm:mb-10 px-4 sm:px-0">
+            <button onClick={handleResumeDownload}
+              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-accent hover:bg-accent-hover text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-0.5 cursor-pointer">
+              <FaDownload className="text-xs group-hover:-translate-y-0.5 transition-transform" /> Resume
+            </button>
+            <a href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('projects');
+                if (el) {
+                  const navbarHeight = 80;
+                  const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+                  window.scrollTo({
+                    top: elementPosition - navbarHeight,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-accent text-sm shadow-sm hover:-translate-y-0.5">
+              View Work <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
             </a>
-          ))}
-        </motion.div>
+          </div>
+
+          {/* Stats */}
+          <div className="hero-stats flex items-center justify-center lg:justify-start gap-3 sm:gap-8 md:gap-12 px-3 sm:px-8 py-3.5 sm:py-4 bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/50 dark:border-white/5 backdrop-blur-sm shadow-sm mb-6 sm:mb-8 mx-auto lg:mx-0 w-fit">
+            <AnimatedCounter value={10} label="Projects" />
+            <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
+            <AnimatedCounter value={10} label="Technologies" />
+            <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
+            <AnimatedCounter value={1} label="Certifications" />
+          </div>
+
+          {/* Socials */}
+          <div className="hero-socials flex gap-2.5 sm:gap-3 justify-center lg:justify-start">
+            {[
+              { Icon: FaGithub, href: 'https://github.com/surajskrv', label: 'GitHub' },
+              { Icon: FaLinkedin, href: 'https://linkedin.com/in/surajskr', label: 'LinkedIn' },
+            ].map(({ Icon, href, label }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                className="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:text-accent hover:bg-accent-light dark:hover:bg-accent-light-dark transition-all duration-200 border border-gray-200 dark:border-gray-700 shadow-sm hover:-translate-y-0.5"
+                aria-label={label}>
+                <Icon className="text-base sm:text-lg" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column: Terminal Console */}
+        <div className="hero-terminal lg:col-span-5 w-full max-w-md lg:max-w-none mx-auto lg:mx-0">
+          <Terminal cursorEnabled={cursorEnabled} setCursorEnabled={setCursorEnabled} />
+        </div>
+
       </div>
 
       {/* Scroll line */}
-      <motion.div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2" initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ delay: 2 }}>
-        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+      <div className="hero-scroll absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 opacity-50">
+        <div className="hero-scroll-line">
           <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-gray-400 dark:from-gray-600 to-transparent" />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

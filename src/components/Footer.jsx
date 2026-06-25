@@ -1,5 +1,4 @@
 import { FaGithub, FaLinkedin, FaArrowUp, FaHeart } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, memo } from 'react';
 
 const socials = [
@@ -7,11 +6,14 @@ const socials = [
   { icon: <FaLinkedin />, href: 'https://linkedin.com/in/surajskr', label: 'LinkedIn' },
 ];
 
-const Footer = memo(function Footer() {
+const Footer = memo(function Footer({ cursorEnabled, setCursorEnabled }) {
   const [showBtn, setShowBtn] = useState(false);
 
   useEffect(() => {
-    const handler = () => setShowBtn(window.scrollY > window.innerHeight * 0.5);
+    const handler = () => {
+      const shouldShow = window.scrollY > window.innerHeight * 0.5;
+      setShowBtn(prev => prev !== shouldShow ? shouldShow : prev);
+    };
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
@@ -19,7 +21,8 @@ const Footer = memo(function Footer() {
   return (
     <footer className="w-full border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Left: Logo & Socials */}
           <div className="flex items-center gap-4">
             <span className="font-display font-extrabold text-lg text-gray-900 dark:text-white">SK<span className="text-indigo-500">.</span></span>
             <div className="flex gap-1">
@@ -33,33 +36,47 @@ const Footer = memo(function Footer() {
             </div>
           </div>
 
+          {/* Middle: Heart tag */}
           <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
             Built with
-            <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }} className="text-rose-500 inline-flex">
+            <span className="text-rose-500 inline-flex animate-heart-pulse">
               <FaHeart className="text-[10px]" />
-            </motion.span>
+            </span>
             by <span className="font-bold gradient-text">Suraj</span>
           </div>
 
+          {/* Right-Middle: Custom Cursor Toggle Switch */}
+          <div className="flex items-center gap-2 select-none">
+            <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">Custom Cursor</span>
+            <button
+              role="switch"
+              aria-checked={cursorEnabled}
+              onClick={() => setCursorEnabled?.(prev => !prev)}
+              className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out border-none cursor-pointer flex items-center relative
+                ${cursorEnabled ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-800'}`}
+              aria-label="Toggle custom cursor"
+            >
+              <span
+                className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out inline-block
+                  ${cursorEnabled ? 'translate-x-4' : 'translate-x-0'}`}
+              />
+            </button>
+          </div>
+
+          {/* Right: Copyright */}
           <p className="text-xs text-gray-500 dark:text-gray-500">&copy; {new Date().getFullYear()} All rights reserved</p>
         </div>
       </div>
 
-      <AnimatePresence>
-        {showBtn && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            aria-label="Scroll to top"
-            className="fixed bottom-6 right-6 p-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition-colors z-40"
-          >
-            <FaArrowUp size={14} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Scroll to top button — CSS-only transition */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Scroll to top"
+        className={`fixed bottom-6 right-6 p-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition-all duration-300 z-40
+          ${showBtn ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-90 pointer-events-none'}`}
+      >
+        <FaArrowUp size={14} />
+      </button>
     </footer>
   );
 });
