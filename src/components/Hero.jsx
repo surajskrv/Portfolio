@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaDownload, FaArrowRight } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaDownload, FaArrowRight, FaLaptopCode, FaCogs, FaAward } from 'react-icons/fa';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { gsap } from '../utils/gsap';
 import Terminal from './Terminal';
@@ -54,7 +54,7 @@ function TypingEffect() {
   );
 }
 
-function AnimatedCounter({ value, label }) {
+function AnimatedCounter({ value, label, icon }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const [done, setDone] = useState(false);
@@ -64,20 +64,40 @@ function AnimatedCounter({ value, label }) {
       if (e.isIntersecting && !done) {
         setDone(true);
         let n = 0;
-        const step = Math.max(1, Math.floor(value / 20));
-        const t = setInterval(() => { n += step; if (n >= value) { setCount(value); clearInterval(t); } else setCount(n); }, 40);
+        const step = Math.max(1, Math.floor(value / 25));
+        const t = setInterval(() => {
+          n += step;
+          if (n >= value) {
+            setCount(value);
+            clearInterval(t);
+          } else {
+            setCount(n);
+          }
+        }, 30);
       }
-    }, { threshold: 0.5 });
+    }, { threshold: 0.3 });
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [value, done]);
 
   return (
-    <div ref={ref} className="text-center min-w-0">
-      <div className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-gray-900 dark:text-white">
-        {count}<span className="text-accent">+</span>
+    <div
+      ref={ref}
+      className="relative group p-4 sm:p-5 rounded-2xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/5 backdrop-blur-md hover:border-accent/30 dark:hover:border-accent/20 hover:shadow-lg hover:shadow-accent/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full text-left"
+    >
+      <div className="flex justify-between items-start mb-2 sm:mb-4">
+        <span className="text-lg sm:text-xl text-accent bg-accent-light dark:bg-accent-light-dark p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 animate-in fade-in duration-300">
+          {icon}
+        </span>
       </div>
-      <div className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">{label}</div>
+      <div className="min-w-0 mt-2">
+        <div className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white leading-none">
+          {count}<span className="text-accent">+</span>
+        </div>
+        <div className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-1.5">
+          {label}
+        </div>
+      </div>
     </div>
   );
 }
@@ -309,7 +329,7 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
           {/* CTAs */}
           <div className="hero-cta flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center lg:justify-start mb-8 sm:mb-10 px-4 sm:px-0">
             <button onClick={handleResumeDownload}
-              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-accent hover:bg-accent-hover text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-0.5 cursor-pointer">
+              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-accent hover:bg-accent-hover text-white font-bold rounded-xl transition-all duration-300 text-sm shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/35 hover:-translate-y-0.5 cursor-pointer border-none">
               <FaDownload className="text-xs group-hover:-translate-y-0.5 transition-transform" /> Resume
             </button>
             <a href="#projects"
@@ -325,28 +345,26 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
                   });
                 }
               }}
-              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-accent text-sm shadow-sm hover:-translate-y-0.5">
+              className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white/60 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/5 text-gray-700 dark:text-gray-200 hover:text-accent hover:border-accent/30 dark:hover:border-accent/20 backdrop-blur-md rounded-xl text-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
               View Work <FaArrowRight className="text-xs group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
 
-          {/* Stats */}
-          <div className="hero-stats flex items-center justify-center lg:justify-start gap-3 sm:gap-8 md:gap-12 px-3 sm:px-8 py-3.5 sm:py-4 bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/50 dark:border-white/5 backdrop-blur-sm shadow-sm mb-6 sm:mb-8 mx-auto lg:mx-0 w-fit">
-            <AnimatedCounter value={10} label="Projects" />
-            <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
-            <AnimatedCounter value={10} label="Technologies" />
-            <div className="w-px h-6 sm:h-8 bg-gray-200 dark:bg-gray-800 flex-shrink-0" />
-            <AnimatedCounter value={1} label="Certifications" />
+          {/* Stats Grid */}
+          <div className="hero-stats grid grid-cols-3 gap-3 sm:gap-4 mb-8 w-full max-w-md lg:max-w-none">
+            <AnimatedCounter value={10} label="Projects" icon={<FaLaptopCode />} />
+            <AnimatedCounter value={10} label="Technologies" icon={<FaCogs />} />
+            <AnimatedCounter value={1} label="Certifications" icon={<FaAward />} />
           </div>
 
           {/* Socials */}
-          <div className="hero-socials flex gap-2.5 sm:gap-3 justify-center lg:justify-start">
+          <div className="hero-socials flex gap-3 justify-center lg:justify-start">
             {[
               { Icon: FaGithub, href: 'https://github.com/surajskrv', label: 'GitHub' },
               { Icon: FaLinkedin, href: 'https://linkedin.com/in/surajskr', label: 'LinkedIn' },
             ].map(({ Icon, href, label }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:text-accent hover:bg-accent-light dark:hover:bg-accent-light-dark transition-all duration-200 border border-gray-200 dark:border-gray-700 shadow-sm hover:-translate-y-0.5"
+                className="p-3 rounded-xl bg-white/60 dark:bg-white/[0.03] text-gray-500 dark:text-gray-400 hover:text-accent hover:border-accent/30 dark:hover:border-accent/20 backdrop-blur-md transition-all duration-300 border border-gray-200/50 dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-1 block cursor-pointer"
                 aria-label={label}>
                 <Icon className="text-base sm:text-lg" />
               </a>
@@ -355,8 +373,12 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         </div>
 
         {/* Right Column: Terminal Console */}
-        <div className="hero-terminal lg:col-span-5 w-full max-w-md lg:max-w-none mx-auto lg:mx-0">
-          <Terminal cursorEnabled={cursorEnabled} setCursorEnabled={setCursorEnabled} />
+        <div className="hero-terminal lg:col-span-5 w-full max-w-md lg:max-w-none mx-auto lg:mx-0 relative group">
+          {/* Background accent glow behind terminal */}
+          <div className="absolute -inset-1.5 bg-gradient-to-r from-accent to-purple-500 rounded-2xl opacity-10 dark:opacity-20 blur-xl group-hover:opacity-15 dark:group-hover:opacity-30 transition duration-500" />
+          <div className="relative">
+            <Terminal cursorEnabled={cursorEnabled} setCursorEnabled={setCursorEnabled} />
+          </div>
         </div>
 
       </div>

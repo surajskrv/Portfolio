@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
-import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch, FaSearch, FaTimes, FaCheckCircle, FaUser } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch, FaTimes, FaCheckCircle, FaUser } from 'react-icons/fa';
 import { gsap } from '../utils/gsap';
 
 const languageColors = {
@@ -115,7 +115,6 @@ function SkeletonCard() {
 const Projects = memo(function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
   const sectionRef = useRef(null);
@@ -179,18 +178,13 @@ const Projects = memo(function Projects() {
   }, [loading]);
 
   const filteredProjects = projects.filter(project => {
-    const titleMatch = project.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const descMatch = project.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const langMatch = project.language.some(lang => lang.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesSearch = titleMatch || descMatch || langMatch;
+    if (activeFilter === 'All') return true;
+    if (activeFilter === 'Flask') return project.language.some(l => l.toLowerCase() === 'flask');
+    if (activeFilter === 'React') return project.language.some(l => l.toLowerCase() === 'react');
+    if (activeFilter === 'Vue.js') return project.language.some(l => l.toLowerCase().includes('vue'));
+    if (activeFilter === 'MERN') return project.language.some(l => ['mongodb', 'express', 'react', 'node'].includes(l.toLowerCase()));
 
-    if (activeFilter === 'All') return matchesSearch;
-    if (activeFilter === 'Flask') return matchesSearch && project.language.some(l => l.toLowerCase() === 'flask');
-    if (activeFilter === 'React') return matchesSearch && project.language.some(l => l.toLowerCase() === 'react');
-    if (activeFilter === 'Vue.js') return matchesSearch && project.language.some(l => l.toLowerCase().includes('vue'));
-    if (activeFilter === 'MERN') return matchesSearch && (project.language.some(l => ['mongodb', 'express', 'react', 'node'].includes(l.toLowerCase())));
-
-    return matchesSearch;
+    return true;
   });
 
   return (
@@ -204,39 +198,21 @@ const Projects = memo(function Projects() {
         </h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">A selection of recent projects showcasing full-stack skills.</p>
         
-        {/* Search & Filter Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
-          
-          {/* Category Tabs */}
-          <div className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl select-none border border-gray-200/50 dark:border-white/5 w-fit flex-wrap">
-            {['All', 'Flask', 'React', 'Vue.js', 'MERN'].map(filter => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`cursor-pointer transition-all duration-300 font-bold px-3 py-1.5 rounded-xl text-xs border-none bg-transparent
-                  ${activeFilter === filter
-                    ? 'text-accent bg-white dark:bg-white/10 shadow-md'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white'
-                  }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Box */}
-          <div className="relative max-w-xs w-full">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
-              <FaSearch size={12} />
-            </span>
-            <input
-              type="text"
-              placeholder="Search tech, name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-850 rounded-2xl focus:outline-none focus:border-accent dark:focus:border-accent text-gray-800 dark:text-gray-150 transition-colors shadow-inner"
-            />
-          </div>
+        {/* Filter Controls */}
+        <div className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl select-none border border-gray-200/50 dark:border-white/5 w-fit flex-wrap mt-8">
+          {['All', 'Flask', 'React', 'Vue.js', 'MERN'].map(filter => (
+            <button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`cursor-pointer transition-all duration-300 font-bold px-3 py-1.5 rounded-xl text-xs border-none bg-transparent
+                ${activeFilter === filter
+                  ? 'text-accent bg-white dark:bg-white/10 shadow-md'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white'
+                }`}
+            >
+              {filter}
+            </button>
+          ))}
         </div>
       </div>
 

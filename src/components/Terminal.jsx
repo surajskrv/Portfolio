@@ -112,10 +112,10 @@ export default function Terminal({ cursorEnabled, setCursorEnabled }) {
     >
       {/* Terminal Title Bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-gray-100/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-800/80 select-none">
-        <div className="flex gap-2">
-          <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
-          <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-          <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+        <div className="flex gap-1.5">
+          <span className="w-3 h-3 rounded-full bg-red-500/90 dark:bg-red-500/80 inline-block border border-red-600/10 shadow-inner hover:brightness-110 transition-all duration-200" />
+          <span className="w-3 h-3 rounded-full bg-amber-500/90 dark:bg-amber-500/80 inline-block border border-amber-600/10 shadow-inner hover:brightness-110 transition-all duration-200" />
+          <span className="w-3 h-3 rounded-full bg-emerald-500/90 dark:bg-emerald-500/80 inline-block border border-emerald-600/10 shadow-inner hover:brightness-110 transition-all duration-200" />
         </div>
         <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500">suraj@portfolio: ~</span>
         <span className="w-10" />

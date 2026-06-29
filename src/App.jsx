@@ -10,6 +10,7 @@ const Skills = lazy(() => import('./components/Skills'));
 const Projects = lazy(() => import('./components/Projects'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
+const NotFound = lazy(() => import('./components/NotFound'));
 
 const Loader = memo(() => (
   <div className="w-full py-24 flex items-center justify-center">
@@ -44,12 +45,25 @@ function App() {
   }, [accentTheme]);
 
   const [cursorEnabled, setCursorEnabled] = useState(() =>
-    localStorage.getItem('cursor-enabled') !== 'false'
+    localStorage.getItem('cursor-enabled') === 'true'
   );
 
   useEffect(() => {
     localStorage.setItem('cursor-enabled', cursorEnabled);
   }, [cursorEnabled]);
+
+  // Client-side routing state
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+      // Refresh scroll animations
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
 
   // Refresh ScrollTrigger on full page load
   useEffect(() => {
@@ -57,6 +71,26 @@ function App() {
     window.addEventListener('load', handleLoad);
     return () => window.removeEventListener('load', handleLoad);
   }, []);
+
+  const isNotFound = currentPath !== '/' && currentPath !== '/index.html';
+
+  if (isNotFound) {
+    return (
+      <div className={`min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden
+        bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100
+        selection:bg-indigo-100 selection:text-indigo-700 dark:selection:bg-indigo-900/50 dark:selection:text-indigo-300`}>
+        <Helmet>
+          <html lang="en" />
+          <title>Page Not Found — Suraj Kumar</title>
+          <meta name="description" content="The page you are looking for does not exist." />
+        </Helmet>
+        {cursorEnabled && <CustomCursor />}
+        <Suspense fallback={<Loader />}>
+          <NotFound />
+        </Suspense>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden

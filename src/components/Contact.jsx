@@ -15,6 +15,7 @@ const Contact = memo(function Contact() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   // ScrollTrigger animations
   useEffect(() => {
@@ -94,7 +95,7 @@ const Contact = memo(function Contact() {
     validateField(name, value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const nameErr = form.name.trim().length < 2 ? 'Name must be at least 2 characters' : '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -107,12 +108,46 @@ const Contact = memo(function Contact() {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message');
+      }
+
       setIsSubmitted(true);
       setForm({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setIsSubmitted(false), 5000);
-    }, 1500);
+    } catch (err) {
+      console.error('Submission error:', err);
+      // Fallback in local development if backend routes aren't loaded/running
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.warn('Vercel serverless function not running. Simulating successful send...');
+        setTimeout(() => {
+          setIsSubmitted(true);
+          setForm({ name: '', email: '', subject: '', message: '' });
+          setTimeout(() => setIsSubmitted(false), 5000);
+        }, 1500);
+      } else {
+        setSubmitError(err.message || 'Unable to send message. Please try again or email directly.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -157,7 +192,7 @@ const Contact = memo(function Contact() {
           <div className="p-5 rounded-2xl bg-accent-light dark:bg-accent-light-dark border border-accent/10 text-left">
             <span className="text-xs font-bold uppercase tracking-wider text-accent block mb-2">Direct Queries</span>
             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-              If you have any quick questions or opportunities regarding internships, frontend projects, or backend setup, feel free to fill out the form. I usually respond within 24 hours.
+              If you have any questions or opportunities, feel free to reach out. I'd be happy to connect!
             </p>
           </div>
         </div>
@@ -276,6 +311,12 @@ const Contact = memo(function Contact() {
                   </label>
                   {errors.message && <p className="text-[10px] text-red-500 mt-1 font-semibold">{errors.message}</p>}
                 </div>
+
+                {submitError && (
+                  <p className="text-xs text-red-500 font-semibold bg-red-50 dark:bg-red-500/10 p-3 rounded-xl border border-red-200/50 dark:border-red-500/20">
+                    {submitError}
+                  </p>
+                )}
 
                 <button
                   type="submit"

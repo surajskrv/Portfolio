@@ -15,7 +15,7 @@ A premium, highly interactive personal portfolio website built with **React**, *
 - **⚡ High-Performance Scroll**: Programmatic offset-aware scrolling, decoupled scroll-progress elements, and optimized rendering loops to prevent layout thrashing.
 - **📂 Tabbed About & Lightbox**: Tab-based education/experience nav and glassmorphic lightbox preview modals.
 - **🛠️ Categorized Skills**: Toggleable skills layouts (Infinite Marquee vs Categorized Grid) with dynamic drop-shadow color card glows.
-- **🔍 Projects & Contact**: Real-time project search tag filters and inline validated email form.
+- **🔍 Projects & Contact**: Dynamic category project filters and inline validated email form.
 
 ---
 
