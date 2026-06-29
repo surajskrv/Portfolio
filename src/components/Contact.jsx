@@ -126,7 +126,7 @@ const Contact = memo(function Contact() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to send message');
+        throw new Error(data.details || data.error || 'Failed to send message');
       }
 
       setIsSubmitted(true);

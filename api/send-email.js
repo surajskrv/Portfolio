@@ -25,6 +25,14 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  // Validate server environment variables
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_TO) {
+    return res.status(500).json({
+      error: 'Configuration Error',
+      details: 'Server environment variables (EMAIL_USER, EMAIL_PASS, EMAIL_TO) are not fully configured in Vercel settings.'
+    });
+  }
+
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
