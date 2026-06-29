@@ -24,11 +24,11 @@ const Footer = memo(function Footer({ cursorEnabled, setCursorEnabled }) {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Left: Logo & Socials */}
           <div className="flex items-center gap-4">
-            <span className="font-display font-extrabold text-lg text-gray-900 dark:text-white">SK<span className="text-indigo-500">.</span></span>
+            <span className="font-display font-extrabold text-lg text-gray-900 dark:text-white">SK<span className="text-accent">.</span></span>
             <div className="flex gap-1">
               {socials.map(s => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-all duration-200"
+                  className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-accent dark:hover:text-accent hover:bg-accent-light dark:hover:bg-accent-light-dark transition-all duration-200"
                   aria-label={s.label}>
                   {s.icon}
                 </a>
@@ -53,7 +53,7 @@ const Footer = memo(function Footer({ cursorEnabled, setCursorEnabled }) {
               aria-checked={cursorEnabled}
               onClick={() => setCursorEnabled?.(prev => !prev)}
               className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out border-none cursor-pointer flex items-center relative
-                ${cursorEnabled ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-800'}`}
+                ${cursorEnabled ? 'bg-accent' : 'bg-gray-300 dark:bg-gray-800'}`}
               aria-label="Toggle custom cursor"
             >
               <span
@@ -72,7 +72,7 @@ const Footer = memo(function Footer({ cursorEnabled, setCursorEnabled }) {
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Scroll to top"
-        className={`fixed bottom-6 right-6 p-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition-all duration-300 z-40
+        className={`fixed bottom-6 right-6 p-3 rounded-xl bg-accent text-white shadow-lg shadow-accent/20 hover:bg-accent-hover transition-all duration-300 z-40
           ${showBtn ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-90 pointer-events-none'}`}
       >
         <FaArrowUp size={14} />

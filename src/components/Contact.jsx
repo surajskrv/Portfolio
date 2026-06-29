@@ -164,7 +164,7 @@ const Contact = memo(function Contact() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         {/* Left Column: Contact Cards Grid */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-          <div className="contact-cards-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="contact-cards-grid grid grid-cols-2 gap-3 sm:gap-4">
             {CONTACTS.map((c) => {
               const Tag = c.href ? 'a' : 'div';
               const linkProps = c.href ? {
@@ -176,13 +176,13 @@ const Contact = memo(function Contact() {
               return (
                 <Tag key={c.label}
                   {...linkProps}
-                  className="contact-card group p-4 sm:p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-accent-light dark:hover:border-accent-light-dark transition-all duration-300 hover:-translate-y-1 block text-left"
+                  className="contact-card group p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-accent-light dark:hover:border-accent-light-dark transition-all duration-300 hover:-translate-y-1 block text-left"
                 >
                   <div className={`w-10 h-10 ${c.accent} rounded-xl flex items-center justify-center text-white text-sm mb-3 shadow-md group-hover:scale-110 transition-transform duration-300`}>
                     {c.icon}
                   </div>
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">{c.label}</p>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">{c.value}</p>
+                  <p className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 truncate">{c.value}</p>
                 </Tag>
               );
             })}

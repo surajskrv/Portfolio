@@ -13,20 +13,31 @@ const Footer = lazy(() => import('./components/Footer'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
 const Loader = memo(() => (
-  <div className="w-full py-24 flex items-center justify-center">
-    <div className="w-6 h-6 border-2 border-indigo-200 dark:border-indigo-800 border-t-indigo-500 rounded-full animate-spin" />
+  <div className="w-full py-32 flex flex-col items-center justify-center gap-4">
+    <div className="relative w-10 h-10 flex items-center justify-center">
+      <div className="absolute inset-0 border-2 border-accent/25 dark:border-accent/10 rounded-full" />
+      <div className="absolute inset-0 border-2 border-t-accent rounded-full animate-spin" />
+    </div>
+    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 animate-pulse">Loading Section...</span>
   </div>
 ));
 Loader.displayName = 'Loader';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(() =>
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
-  const toggleDarkMode = useCallback(() => setDarkMode(dm => !dm), []);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('dark-mode');
+    return saved === 'true'; // Default to false (light mode)
+  });
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(dm => {
+      const next = !dm;
+      localStorage.setItem('dark-mode', String(next));
+      return next;
+    });
+  }, []);
 
   const [accentTheme, setAccentTheme] = useState(() =>
-    localStorage.getItem('accent-theme') || 'theme-indigo'
+    localStorage.getItem('accent-theme') || 'theme-rose'
   );
 
   const changeAccentTheme = useCallback((theme) => {
@@ -76,9 +87,7 @@ function App() {
 
   if (isNotFound) {
     return (
-      <div className={`min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden
-        bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100
-        selection:bg-indigo-100 selection:text-indigo-700 dark:selection:bg-indigo-900/50 dark:selection:text-indigo-300`}>
+      <div className="min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100">
         <Helmet>
           <html lang="en" />
           <title>Page Not Found — Suraj Kumar</title>
@@ -93,9 +102,7 @@ function App() {
   }
 
   return (
-    <div className={`min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden
-      bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100
-      selection:bg-indigo-100 selection:text-indigo-700 dark:selection:bg-indigo-900/50 dark:selection:text-indigo-300`}>
+    <div className="min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100">
       <Helmet>
         <html lang="en" />
         <title>Suraj Kumar — Full Stack Developer</title>

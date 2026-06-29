@@ -21,9 +21,7 @@ export default function CustomCursor() {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      if (!visible) {
-        setVisible(true);
-      }
+      setVisible(true);
 
       // Update inner dot immediately for zero latency
       if (innerRef.current) {
@@ -108,19 +106,17 @@ export default function CustomCursor() {
       document.removeEventListener('mouseenter', onMouseEnterWindow);
       cancelAnimationFrame(animationId);
     };
-  }, [visible]);
-
-  if (!visible) return null;
+  }, []);
 
   return (
     <>
       <div
         ref={outerRef}
-        className={`custom-cursor ${hovered ? 'cursor-hovered' : ''}`}
+        className={`custom-cursor ${hovered ? 'cursor-hovered' : ''} ${!visible ? 'cursor-hidden' : ''}`}
       />
       <div
         ref={innerRef}
-        className={`custom-cursor-dot ${hovered ? 'cursor-hovered-dot' : ''}`}
+        className={`custom-cursor-dot ${hovered ? 'cursor-hovered-dot' : ''} ${!visible ? 'cursor-hidden' : ''}`}
       />
     </>
   );

@@ -4,14 +4,30 @@
 
 @layer base {
   :root {
+    --accent-color: #e11d48;
+    --accent-hover: #be123c;
+    --accent-light: #ffe4e6;
+    --accent-light-dark: rgba(225, 29, 72, 0.05);
+    --accent-glow: rgba(225, 29, 72, 0.15);
+  }
+  
+  .dark {
+    --accent-color: #f43f5e;
+    --accent-hover: #e11d48;
+    --accent-light: rgba(244, 63, 94, 0.1);
+    --accent-light-dark: rgba(244, 63, 94, 0.05);
+    --accent-glow: rgba(244, 63, 94, 0.2);
+  }
+
+  /* Indigo Theme Override */
+  .theme-indigo {
     --accent-color: #4f46e5;
     --accent-hover: #4338ca;
     --accent-light: #ede9fe;
     --accent-light-dark: rgba(99, 102, 241, 0.05);
     --accent-glow: rgba(79, 70, 229, 0.15);
   }
-  
-  .dark {
+  .dark.theme-indigo, .dark .theme-indigo {
     --accent-color: #818cf8;
     --accent-hover: #6366f1;
     --accent-light: rgba(129, 140, 248, 0.1);
@@ -151,10 +167,14 @@
     @apply bg-gray-950;
   }
   .section-alt {
-    @apply bg-gradient-to-b from-indigo-50/50 via-white to-white;
+    background-image: linear-gradient(to bottom, var(--accent-light) 0%, #ffffff 100%);
   }
   .dark .section-alt {
-    @apply bg-gradient-to-b from-indigo-950/20 via-gray-950 to-gray-950;
+    background-image: linear-gradient(to bottom, var(--accent-light-dark) 0%, #030712 100%);
+  }
+  ::selection {
+    background-color: var(--accent-light);
+    color: var(--accent-color);
   }
 
   /* Shimmer loading */
@@ -222,6 +242,9 @@
   .cursor-hovered-dot {
     transform: translate(-50%, -50%) scale(1.5);
     background-color: var(--accent-hover);
+  }
+  .cursor-hidden {
+    opacity: 0 !important;
   }
 }
 

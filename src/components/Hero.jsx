@@ -83,18 +83,18 @@ function AnimatedCounter({ value, label, icon }) {
   return (
     <div
       ref={ref}
-      className="relative group p-4 sm:p-5 rounded-2xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/5 backdrop-blur-md hover:border-accent/30 dark:hover:border-accent/20 hover:shadow-lg hover:shadow-accent/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full text-left"
+      className="relative group p-2.5 sm:p-5 rounded-xl sm:rounded-2xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/50 dark:border-white/5 backdrop-blur-md hover:border-accent/30 dark:hover:border-accent/20 hover:shadow-lg hover:shadow-accent/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full text-left"
     >
-      <div className="flex justify-between items-start mb-2 sm:mb-4">
-        <span className="text-lg sm:text-xl text-accent bg-accent-light dark:bg-accent-light-dark p-2 rounded-xl group-hover:scale-110 transition-transform duration-300 animate-in fade-in duration-300">
+      <div className="flex justify-between items-start mb-1 sm:mb-4">
+        <span className="text-sm sm:text-xl text-accent bg-accent-light dark:bg-accent-light-dark p-1.5 sm:p-2 rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 animate-in fade-in duration-300">
           {icon}
         </span>
       </div>
-      <div className="min-w-0 mt-2">
-        <div className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white leading-none">
+      <div className="min-w-0 mt-1 sm:mt-2">
+        <div className="text-lg sm:text-3xl font-display font-black text-gray-900 dark:text-white leading-none">
           {count}<span className="text-accent">+</span>
         </div>
-        <div className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-1.5">
+        <div className="text-[8px] xs:text-[9px] sm:text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-1 sm:mt-1.5 truncate">
           {label}
         </div>
       </div>
@@ -108,11 +108,11 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
   const canvasRef = useRef(null);
   const xToRef = useRef(null);
   const yToRef = useRef(null);
-  const activeColorRef = useRef('#4f46e5');
+  const activeColorRef = useRef('#e11d48');
 
   // Track active accent theme hex color changes inside a ref
   useEffect(() => {
-    activeColorRef.current = themeColors[accentTheme] || '#4f46e5';
+    activeColorRef.current = themeColors[accentTheme] || '#e11d48';
   }, [accentTheme]);
 
   // Canvas particle backdrop logic
@@ -303,7 +303,7 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         style={{ backgroundImage: 'radial-gradient(circle, var(--accent-color) 0.8px, transparent 0.8px)', backgroundSize: '28px 28px' }} />
 
       {/* Two-Column Responsive Grid Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-12 sm:pt-16 lg:pt-0">
         
         {/* Left Column: Bio Details */}
         <div className="lg:col-span-7 flex flex-col justify-center">
@@ -351,7 +351,7 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
           </div>
 
           {/* Stats Grid */}
-          <div className="hero-stats grid grid-cols-3 gap-3 sm:gap-4 mb-8 w-full max-w-md lg:max-w-none">
+          <div className="hero-stats grid grid-cols-3 gap-2 sm:gap-4 mb-8 w-full max-w-md lg:max-w-none">
             <AnimatedCounter value={10} label="Projects" icon={<FaLaptopCode />} />
             <AnimatedCounter value={10} label="Technologies" icon={<FaCogs />} />
             <AnimatedCounter value={1} label="Certifications" icon={<FaAward />} />
