@@ -26,7 +26,8 @@ Loader.displayName = 'Loader';
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('dark-mode');
-    return saved === 'true'; // Default to false (light mode)
+    if (saved !== null) return saved === 'true';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
   const toggleDarkMode = useCallback(() => {
     setDarkMode(dm => {
@@ -117,19 +118,19 @@ function App() {
         </section>
 
         <Suspense fallback={<Loader />}>
-          <section id="about" className="w-full section-alt"><About /></section>
+          <section id="about" className="w-full section-alt" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}><About /></section>
         </Suspense>
 
         <Suspense fallback={<Loader />}>
-          <section id="skills" className="w-full section-light"><Skills /></section>
+          <section id="skills" className="w-full section-light" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 600px' }}><Skills /></section>
         </Suspense>
 
         <Suspense fallback={<Loader />}>
-          <section id="projects" className="w-full section-alt"><Projects /></section>
+          <section id="projects" className="w-full section-alt" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}><Projects /></section>
         </Suspense>
 
         <Suspense fallback={<Loader />}>
-          <section id="contact" className="w-full section-light"><Contact /></section>
+          <section id="contact" className="w-full section-light" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 700px' }}><Contact /></section>
         </Suspense>
       </main>
       <Suspense fallback={null}>

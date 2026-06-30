@@ -125,7 +125,7 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
     let height = (canvas.height = canvas.offsetHeight);
 
     const particles = [];
-    const particleCount = Math.min(50, Math.floor((width * height) / 25000));
+    const particleCount = Math.min(35, Math.floor((width * height) / 30000));
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -333,12 +333,12 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         }}
       />
 
-      {/* Decorative blobs */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Decorative blobs — GPU composited with containment */}
+      <div className="absolute inset-0 overflow-hidden" style={{ contain: 'strict' }}>
         <div className="absolute w-64 sm:w-80 md:w-[500px] h-64 sm:h-80 md:h-[500px] opacity-30 dark:opacity-[0.08] gpu animate-blob"
-          style={{ background: 'radial-gradient(circle, var(--accent-color), transparent 70%)', top: '-15%', right: '-10%', filter: 'blur(80px)' }} />
+          style={{ background: 'radial-gradient(circle, var(--accent-color), transparent 70%)', top: '-15%', right: '-10%', filter: 'blur(60px)', borderRadius: '50%' }} />
         <div className="absolute w-52 sm:w-72 md:w-[400px] h-52 sm:h-72 md:h-[400px] opacity-20 dark:opacity-[0.06] gpu animate-blob"
-          style={{ background: 'radial-gradient(circle, #e879f9, transparent 70%)', bottom: '5%', left: '-8%', filter: 'blur(80px)', animationDelay: '-3s' }} />
+          style={{ background: 'radial-gradient(circle, #e879f9, transparent 70%)', bottom: '5%', left: '-8%', filter: 'blur(60px)', borderRadius: '50%', animationDelay: '-3s' }} />
       </div>
 
       {/* Dot grid */}

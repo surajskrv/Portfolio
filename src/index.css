@@ -203,8 +203,8 @@
     @apply bg-indigo-500/10 text-indigo-400 border-indigo-500/20;
   }
 
-  /* GPU hint */
-  .gpu { will-change: transform; transform: translateZ(0); }
+  /* GPU hint — compositor-only layer with layout containment */
+  .gpu { will-change: transform; transform: translateZ(0); contain: layout style; }
 
   /* Custom Interactive Cursor — GPU composited via transform */
   .custom-cursor {
@@ -266,10 +266,10 @@
 }
 
 @keyframes blob {
-  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-  25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-  50% { border-radius: 50% 60% 30% 60% / 40% 30% 60% 50%; }
-  75% { border-radius: 60% 40% 60% 30% / 60% 50% 40% 60%; }
+  0%, 100% { transform: translateZ(0) scale(1) rotate(0deg); }
+  25% { transform: translateZ(0) scale(1.05) rotate(3deg); }
+  50% { transform: translateZ(0) scale(0.95) rotate(-2deg); }
+  75% { transform: translateZ(0) scale(1.03) rotate(1deg); }
 }
 
 @keyframes pulse-ring {
