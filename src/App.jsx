@@ -105,8 +105,9 @@ function App() {
     <div className="min-h-screen w-full font-sans m-0 p-0 overflow-x-hidden bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100">
       <Helmet>
         <html lang="en" />
-        <title>Suraj Kumar — Full Stack Developer</title>
-        <meta name="description" content="Portfolio of Suraj Kumar — Full Stack Developer specializing in React, Node.js, Flask, Vue.js, and MongoDB." />
+        <title>Suraj Kumar | Full Stack Developer & Python Engineer Portfolio</title>
+        <meta name="description" content="Portfolio of Suraj Kumar — Full Stack Developer, Python Software Engineer, and MERN Developer specializing in React, Node.js, Flask, Vue.js, SQL, and MongoDB. View projects, skills, and get in touch." />
+        <meta name="keywords" content="Suraj Kumar, Full Stack Developer, Python Developer, MERN Developer, Web Developer Portfolio, React, Node.js, Flask, Vue.js, IIT Madras, surajskrv" />
       </Helmet>
       {cursorEnabled && <CustomCursor />}
       <Navbar darkMode={darkMode} setDarkMode={toggleDarkMode} accentTheme={accentTheme} setAccentTheme={changeAccentTheme} />
