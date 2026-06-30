@@ -52,15 +52,20 @@ const projectDetails = {
 
 const TiltCard = memo(function TiltCard({ children, className }) {
   const ref = useRef(null);
+  const rectRef = useRef(null);
 
   useEffect(() => {
     if (!ref.current) return;
     gsap.set(ref.current, { transformPerspective: 1200 });
   }, []);
 
+  const onEnter = useCallback(() => {
+    if (ref.current) rectRef.current = ref.current.getBoundingClientRect();
+  }, []);
+
   const onMove = useCallback((e) => {
-    if (!ref.current) return;
-    const r = ref.current.getBoundingClientRect();
+    if (!ref.current || !rectRef.current) return;
+    const r = rectRef.current;
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
     gsap.to(ref.current, {
@@ -73,6 +78,7 @@ const TiltCard = memo(function TiltCard({ children, className }) {
   }, []);
 
   const onLeave = useCallback(() => {
+    rectRef.current = null;
     if (!ref.current) return;
     gsap.to(ref.current, {
       rotateX: 0,
@@ -86,6 +92,7 @@ const TiltCard = memo(function TiltCard({ children, className }) {
   return (
     <div
       ref={ref}
+      onMouseEnter={onEnter}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className={className}

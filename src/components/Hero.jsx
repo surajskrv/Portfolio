@@ -140,10 +140,12 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
     let mouseX = null;
     let mouseY = null;
 
+    // Cache canvas rect — read once on mount and refresh on resize
+    let cachedRect = canvas.getBoundingClientRect();
+
     const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+      mouseX = e.clientX - cachedRect.left;
+      mouseY = e.clientY - cachedRect.top;
     };
 
     const handleMouseLeave = () => {
@@ -155,9 +157,13 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
     window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     let isVisible = true;
+    let frameCount = 0;
+    const LINE_DIST_SQ = 110 * 110; // 12100 — pre-computed squared threshold
+
     const draw = () => {
       if (!isVisible) return;
       ctx.clearRect(0, 0, width, height);
+      frameCount++;
 
       // Fetch dynamic active color from ref (no layout reflow forced!)
       const accent = activeColorRef.current;
@@ -181,8 +187,9 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         if (mouseX !== null && mouseY !== null) {
           const dx = p.x - mouseX;
           const dy = p.y - mouseY;
-          const dist = Math.hypot(dx, dy);
-          if (dist < 100) {
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 10000) { // 100²
+            const dist = Math.sqrt(distSq);
             const force = (100 - dist) / 100;
             p.x += (dx / dist) * force * 1.2;
             p.y += (dy / dist) * force * 1.2;
@@ -190,18 +197,23 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         }
       });
 
-      // Draw linkage lines
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const p1 = particles[i];
-          const p2 = particles[j];
-          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.globalAlpha = ((110 - dist) / 110) * 0.1;
-            ctx.stroke();
+      // Draw linkage lines — every other frame (30fps) since decorative
+      if (frameCount % 2 === 0) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const p1 = particles[i];
+            const p2 = particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < LINE_DIST_SQ) {
+              const dist = Math.sqrt(distSq);
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.globalAlpha = ((110 - dist) / 110) * 0.1;
+              ctx.stroke();
+            }
           }
         }
       }
@@ -216,6 +228,7 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
         if (!canvas) return;
         width = canvas.width = canvas.offsetWidth;
         height = canvas.height = canvas.offsetHeight;
+        cachedRect = canvas.getBoundingClientRect();
       });
     };
     window.addEventListener('resize', handleResize, { passive: true });
@@ -275,15 +288,24 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
   }, []);
 
   // Mouse spotlight (desktop only)
+  const sectionRectRef = useRef(null);
   useEffect(() => {
     if (!spotlightRef.current) return;
     xToRef.current = gsap.quickTo(spotlightRef.current, '--spot-x', { duration: 0.5, ease: 'power3.out' });
     yToRef.current = gsap.quickTo(spotlightRef.current, '--spot-y', { duration: 0.5, ease: 'power3.out' });
+
+    // Cache section rect and refresh on resize
+    if (sectionRef.current) sectionRectRef.current = sectionRef.current.getBoundingClientRect();
+    const onResize = () => {
+      if (sectionRef.current) sectionRectRef.current = sectionRef.current.getBoundingClientRect();
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const onMouseMove = useCallback((e) => {
-    if (!sectionRef.current) return;
-    const r = sectionRef.current.getBoundingClientRect();
+    const r = sectionRectRef.current;
+    if (!r) return;
     xToRef.current?.(e.clientX - r.left);
     yToRef.current?.(e.clientY - r.top);
   }, []);
