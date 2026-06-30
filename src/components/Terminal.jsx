@@ -124,6 +124,8 @@ export default function Terminal({ cursorEnabled, setCursorEnabled }) {
       {/* Screen History */}
       <div
         ref={containerRef}
+        role="log"
+        aria-live="polite"
         className="flex-1 p-4 overflow-y-auto space-y-2 select-text scrollbar-thin scrollbar-thumb-accent"
       >
         {history.map((line, i) => (
@@ -151,6 +153,7 @@ export default function Terminal({ cursorEnabled, setCursorEnabled }) {
           placeholder="type a command..."
           autoComplete="off"
           autoCapitalize="none"
+          aria-label="Terminal command prompt input"
         />
       </form>
 

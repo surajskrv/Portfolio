@@ -90,11 +90,21 @@ export default function CustomCursor() {
       setVisible(true);
     };
 
+    const onWindowBlur = () => {
+      setVisible(false);
+    };
+
+    const onWindowFocus = () => {
+      setVisible(true);
+    };
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     document.addEventListener('mouseover', onMouseOver, { passive: true });
     document.addEventListener('mouseout', onMouseOut, { passive: true });
     document.addEventListener('mouseleave', onMouseLeaveWindow);
     document.addEventListener('mouseenter', onMouseEnterWindow);
+    window.addEventListener('blur', onWindowBlur);
+    window.addEventListener('focus', onWindowFocus);
 
     const animationId = requestAnimationFrame(render);
 
@@ -104,6 +114,8 @@ export default function CustomCursor() {
       document.removeEventListener('mouseout', onMouseOut);
       document.removeEventListener('mouseleave', onMouseLeaveWindow);
       document.removeEventListener('mouseenter', onMouseEnterWindow);
+      window.removeEventListener('blur', onWindowBlur);
+      window.removeEventListener('focus', onWindowFocus);
       cancelAnimationFrame(animationId);
     };
   }, []);

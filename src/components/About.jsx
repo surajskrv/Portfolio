@@ -36,6 +36,56 @@ const About = memo(function About() {
   const sectionRef = useRef(null);
   const [activeTab, setActiveTab] = useState('education');
   const [lightboxImg, setLightboxImg] = useState(null);
+  const [imgLoading, setImgLoading] = useState(true);
+  const lightboxRef = useRef(null);
+  const lightboxCloseRef = useRef(null);
+
+  // Close lightbox on escape keypress
+  useEffect(() => {
+    if (!lightboxImg) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setLightboxImg(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxImg]);
+
+  // Focus lightbox close button when opened
+  useEffect(() => {
+    if (lightboxImg) {
+      setImgLoading(true);
+      const focusTimeout = setTimeout(() => {
+        lightboxCloseRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(focusTimeout);
+    }
+  }, [lightboxImg]);
+
+  // Tab key focus trap inside lightbox
+  const handleTabKey = (e) => {
+    if (e.key !== 'Tab') return;
+    if (!lightboxRef.current) return;
+    const focusableElements = lightboxRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusableElements.length) return;
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  };
 
   // Entrance animations for scroll triggers
   useEffect(() => {
@@ -149,7 +199,11 @@ const About = memo(function About() {
         {/* Right Column: Tabbed Interface */}
         <div className="lg:col-span-7 about-right-panel flex flex-col">
           {/* Tabs Selector */}
-          <div className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl mb-6 select-none w-fit border border-gray-200/50 dark:border-white/5">
+          <div
+            role="tablist"
+            aria-label="About section categories"
+            className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl mb-6 select-none w-fit border border-gray-200/50 dark:border-white/5"
+          >
             {[
               { id: 'education', name: 'Education' },
               { id: 'experience', name: 'Experience' },
@@ -157,6 +211,8 @@ const About = memo(function About() {
             ].map(tab => (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id ? 'true' : 'false'}
                 onClick={() => setActiveTab(tab.id)}
                 className={`cursor-pointer transition-all duration-300 font-bold px-4 py-2 rounded-xl text-xs border-none bg-transparent
                   ${activeTab === tab.id
@@ -247,15 +303,23 @@ const About = memo(function About() {
           onClick={() => setLightboxImg(null)}
         >
           <div
-            className="relative max-w-4xl max-h-[85vh] overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl p-2 animate-in zoom-in-95 duration-200"
+            ref={lightboxRef}
+            onKeyDown={handleTabKey}
+            className="relative max-w-4xl max-h-[85vh] min-w-[280px] min-h-[180px] sm:min-w-[400px] sm:min-h-[250px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl p-2 animate-in zoom-in-95 duration-200 flex flex-col justify-center items-center"
             onClick={(e) => e.stopPropagation()}
           >
+            {imgLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-2xl z-10">
+                <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-accent animate-spin" />
+              </div>
+            )}
             <img
               src={lightboxImg}
               alt="Certificate"
-              className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-inner"
+              onLoad={() => setImgLoading(false)}
+              className={`max-w-full max-h-[75vh] object-contain rounded-lg shadow-inner transition-opacity duration-300 ${imgLoading ? 'opacity-0' : 'opacity-100'}`}
             />
-            <div className="flex items-center justify-between mt-3 px-2">
+            <div className="flex items-center justify-between mt-3 px-2 w-full">
               <a
                 href={lightboxImg}
                 target="_blank"
@@ -265,6 +329,7 @@ const About = memo(function About() {
                 Open in new tab <FaExternalLinkAlt size={10} />
               </a>
               <button
+                ref={lightboxCloseRef}
                 onClick={() => setLightboxImg(null)}
                 className="px-4 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg border-none cursor-pointer transition-colors shadow"
               >

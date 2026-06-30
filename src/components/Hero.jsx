@@ -154,7 +154,9 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
+    let isVisible = true;
     const draw = () => {
+      if (!isVisible) return;
       ctx.clearRect(0, 0, width, height);
 
       // Fetch dynamic active color from ref (no layout reflow forced!)
@@ -207,17 +209,36 @@ function Hero({ accentTheme, cursorEnabled, setCursorEnabled }) {
       animationId = requestAnimationFrame(draw);
     };
 
+    let resizeTimeout;
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+      if (resizeTimeout) cancelAnimationFrame(resizeTimeout);
+      resizeTimeout = requestAnimationFrame(() => {
+        if (!canvas) return;
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+      });
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
-    draw();
+    // Setup intersection observer to pause updates offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          cancelAnimationFrame(animationId);
+          draw();
+        } else {
+          cancelAnimationFrame(animationId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(canvas);
 
     return () => {
       cancelAnimationFrame(animationId);
+      if (resizeTimeout) cancelAnimationFrame(resizeTimeout);
+      observer.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);

@@ -118,6 +118,54 @@ const Projects = memo(function Projects() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
   const sectionRef = useRef(null);
+  const modalRef = useRef(null);
+  const modalCloseRef = useRef(null);
+
+  // Close modal on escape keypress
+  useEffect(() => {
+    if (!selectedProject) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedProject]);
+
+  // Focus modal close button when opened
+  useEffect(() => {
+    if (selectedProject) {
+      const focusTimeout = setTimeout(() => {
+        modalCloseRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(focusTimeout);
+    }
+  }, [selectedProject]);
+
+  // Tab key focus trap inside details modal
+  const handleTabKey = (e) => {
+    if (e.key !== 'Tab') return;
+    if (!modalRef.current) return;
+    const focusableElements = modalRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusableElements.length) return;
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        lastElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    }
+  };
 
   useEffect(() => {
     if (USE_LOCAL_DATA) {
@@ -177,6 +225,25 @@ const Projects = memo(function Projects() {
     return () => ctx.revert();
   }, [loading]);
 
+  // Stagger animation when filter changes
+  useEffect(() => {
+    if (loading || projects.length === 0) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.project-card',
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          stagger: 0.06,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        }
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, [activeFilter, loading, projects]);
+
   const filteredProjects = projects.filter(project => {
     if (activeFilter === 'All') return true;
     if (activeFilter === 'Flask') return project.language.some(l => l.toLowerCase() === 'flask');
@@ -199,10 +266,16 @@ const Projects = memo(function Projects() {
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">A selection of recent projects showcasing full-stack skills.</p>
         
         {/* Filter Controls */}
-        <div className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl select-none border border-gray-200/50 dark:border-white/5 w-fit flex-wrap mt-8">
+        <div
+          role="tablist"
+          aria-label="Project category filter"
+          className="flex items-center gap-1 bg-gray-100/70 dark:bg-white/[0.04] p-1 rounded-2xl select-none border border-gray-200/50 dark:border-white/5 w-fit flex-wrap mt-8"
+        >
           {['All', 'Flask', 'React', 'Vue.js', 'MERN'].map(filter => (
             <button
               key={filter}
+              role="tab"
+              aria-selected={activeFilter === filter ? 'true' : 'false'}
               onClick={() => setActiveFilter(filter)}
               className={`cursor-pointer transition-all duration-300 font-bold px-3 py-1.5 rounded-xl text-xs border-none bg-transparent
                 ${activeFilter === filter
@@ -310,11 +383,14 @@ const Projects = memo(function Projects() {
             onClick={() => setSelectedProject(null)}
           >
             <div
+              ref={modalRef}
+              onKeyDown={handleTabKey}
               className="relative max-w-xl w-full rounded-2xl border border-gray-200/50 dark:border-white/10 bg-white dark:bg-gray-900 shadow-2xl p-6 md:p-8 animate-in zoom-in-95 duration-200 text-left overflow-y-auto max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
+                ref={modalCloseRef}
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 p-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 transition-colors border-none cursor-pointer"
                 aria-label="Close modal"

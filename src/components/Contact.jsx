@@ -135,7 +135,9 @@ const Contact = memo(function Contact() {
     } catch (err) {
       console.error('Submission error:', err);
       // Fallback in local development if backend routes aren't loaded/running
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const host = window.location.hostname;
+      const isLocal = host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.') || host.endsWith('.local');
+      if (isLocal) {
         console.warn('Vercel serverless function not running. Simulating successful send...');
         setTimeout(() => {
           setIsSubmitted(true);
@@ -233,6 +235,8 @@ const Contact = memo(function Contact() {
                       }`}
                     placeholder=" "
                     required
+                    aria-invalid={errors.name ? 'true' : 'false'}
+                    aria-describedby={errors.name ? 'name-error' : undefined}
                   />
                   <label
                     htmlFor="name"
@@ -240,7 +244,7 @@ const Contact = memo(function Contact() {
                   >
                     Your Name
                   </label>
-                  {errors.name && <p className="text-[10px] text-red-500 mt-1 font-semibold">{errors.name}</p>}
+                  {errors.name && <p id="name-error" className="text-[10px] text-red-500 mt-1 font-semibold">{errors.name}</p>}
                 </div>
 
                 {/* Email field */}
@@ -258,6 +262,8 @@ const Contact = memo(function Contact() {
                       }`}
                     placeholder=" "
                     required
+                    aria-invalid={errors.email ? 'true' : 'false'}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
                   />
                   <label
                     htmlFor="email"
@@ -265,7 +271,7 @@ const Contact = memo(function Contact() {
                   >
                     Email Address
                   </label>
-                  {errors.email && <p className="text-[10px] text-red-500 mt-1 font-semibold">{errors.email}</p>}
+                  {errors.email && <p id="email-error" className="text-[10px] text-red-500 mt-1 font-semibold">{errors.email}</p>}
                 </div>
 
                 {/* Subject field */}
@@ -302,6 +308,8 @@ const Contact = memo(function Contact() {
                       }`}
                     placeholder=" "
                     required
+                    aria-invalid={errors.message ? 'true' : 'false'}
+                    aria-describedby={errors.message ? 'message-error' : undefined}
                   />
                   <label
                     htmlFor="message"
@@ -309,7 +317,7 @@ const Contact = memo(function Contact() {
                   >
                     Your Message
                   </label>
-                  {errors.message && <p className="text-[10px] text-red-500 mt-1 font-semibold">{errors.message}</p>}
+                  {errors.message && <p id="message-error" className="text-[10px] text-red-500 mt-1 font-semibold">{errors.message}</p>}
                 </div>
 
                 {submitError && (
